@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import AdminShell from "@/components/admin/AdminShell";
 import { useAdmin } from "@/hooks/useAdmin";
 import { Upload, Trash2, X } from "lucide-react";
@@ -26,15 +26,15 @@ export default function AdminGallery() {
   const [category, setCategory]   = useState<GalleryItem["category"]>("product");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     const res  = await apiFetch("/api/admin/gallery");
     const data = await res.json();
     if (Array.isArray(data)) setList(data.sort((a: GalleryItem, b: GalleryItem) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
     setLoading(false);
-  };
+  }, [apiFetch]);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [load]);
 
   const handleFiles = async (files: FileList) => {
     setErr("");

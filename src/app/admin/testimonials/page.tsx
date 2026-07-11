@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import AdminShell from "@/components/admin/AdminShell";
 import { useAdmin } from "@/hooks/useAdmin";
 import { Trash2, Star } from "lucide-react";
@@ -11,7 +11,7 @@ export default function AdminTestimonials() {
   const [list, setList]   = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     const res  = await apiFetch("/api/admin/testimonials");
     const data = await res.json();
@@ -19,9 +19,9 @@ export default function AdminTestimonials() {
       setList(data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
     }
     setLoading(false);
-  };
+  }, [apiFetch]);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [load]);
 
   const remove = async (id: string) => {
     if (!confirm("Hapus testimoni ini?")) return;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import AdminShell from "@/components/admin/AdminShell";
 import ImageUpload from "@/components/admin/ImageUpload";
 import { useAdmin } from "@/hooks/useAdmin";
@@ -21,15 +21,15 @@ export default function AdminArtisans() {
   const [form, setForm]     = useState(EMPTY);
   const [saving, setSaving] = useState(false);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     const res  = await apiFetch("/api/admin/artisans");
     const data = await res.json();
     if (Array.isArray(data)) setList(data);
     setLoading(false);
-  };
+  }, [apiFetch]);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [load]);
 
   const openNew  = () => { setEditing(null); setForm(EMPTY); setShowForm(true); };
   const openEdit = (a: Artisan) => { setEditing(a); setForm({ ...a }); setShowForm(true); };

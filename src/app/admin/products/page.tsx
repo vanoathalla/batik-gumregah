@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import AdminShell from "@/components/admin/AdminShell";
 import MultiImageUpload from "@/components/admin/MultiImageUpload";
 import { useAdmin } from "@/hooks/useAdmin";
@@ -25,15 +25,15 @@ export default function AdminProducts() {
   const [form, setForm]     = useState<Omit<Product, "id" | "createdAt">>(EMPTY);
   const [saving, setSaving] = useState(false);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     const res  = await apiFetch("/api/admin/products");
     const data = await res.json();
     if (Array.isArray(data)) setList(data);
     setLoading(false);
-  };
+  }, [apiFetch]);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [load]);
 
   const openNew  = () => { setEditing(null); setForm(EMPTY); setShowForm(true); };
   const openEdit = (p: Product) => { setEditing(p); setForm({ ...p }); setShowForm(true); };
