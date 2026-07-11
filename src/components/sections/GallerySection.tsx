@@ -1,23 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import AnimateOnScroll from "@/components/ui/AnimateOnScroll";
-import { X } from "lucide-react";
-
-const items = [
-  { id: 1, label: { id: "Proses Membatik",  en: "Batik Making"     }, span: "col-span-2 row-span-2" },
-  { id: 2, label: { id: "Pencantingan",     en: "Canting Process"  }, span: "" },
-  { id: 3, label: { id: "Pameran",          en: "Exhibition"       }, span: "" },
-  { id: 4, label: { id: "Pengrajin",        en: "Artisan"          }, span: "" },
-  { id: 5, label: { id: "Pewarnaan",        en: "Dyeing"           }, span: "col-span-2" },
-  { id: 6, label: { id: "Produk Selesai",   en: "Finished Product" }, span: "" },
-  { id: 7, label: { id: "Workshop",         en: "Workshop"         }, span: "" },
-];
+import { X, ZoomIn } from "lucide-react";
+import type { GalleryItem } from "@/lib/store";
 
 export default function GallerySection() {
   const { t, locale } = useLanguage();
-  const [open, setOpen] = useState<(typeof items)[0] | null>(null);
+  const [items, setItems]   = useState<GalleryItem[]>([]);
+  const [open, setOpen]     = useState<GalleryItem | null>(null);
+  const [filter, setFilter] = useState<"all" | GalleryItem["category"]>("all");
+
+  useEffect(() => {
+    fetch("/api/gallery")
+      .then((r) => r.json())
+      .then((d) => Array.isArray(d) && setItems(d))
+      .catch(() => {});
+  }, []);
+
+  const catLabels: Record<GalleryItem["category"], { id: string; en: string }> = {
+    process:    { id: "Proses",    en: "Process"    },
+    exhibition: { id: "Pameran",   en: "Exhibition" },
+    artisan:    { id: "Pengrajin", en: "Artisan"    },
+    product:    { id: "Produk",    en: "Product"    },
+    workshop:   { id: "Workshop",  en: "Workshop"   },
+  };
+
+  const cats = ["all", "process", "exhibition", "artisan", "product", "workshop"] as const;
+
+  const filtered = filter === "all" ? items : items.filter((g) => g.category === filter);
 
   return (
     <section id="gallery" style={{ background: "var(--cream-2)", padding: "6rem 0" }}>
@@ -36,69 +48,98 @@ export default function GallerySection() {
           </p>
         </AnimateOnScroll>
 
-        {/* Grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gridAutoRows: "180px", gap: "10px" }}
-          className="gallery-grid">
-          {items.map((item) => (
-            <AnimateOnScroll key={item.id} className={item.span}>
-              <button
-                onClick={() => setOpen(item)}
-                style={{ width: "100%", height: "100%", background: "none", border: "none", padding: 0, cursor: "pointer", borderRadius: "12px", overflow: "hidden", position: "relative" }}
-              >
-                <div
-                  className="img-placeholder"
-                  style={{ width: "100%", height: "100%", borderRadius: "12px", transition: "opacity .2s" }}
-                  onMouseEnter={(e) => ((e.currentTarget as HTMLDivElement).style.opacity = ".8")}
-                  onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.opacity = "1")}
-                >
-                  <div style={{ width: "28px", height: "28px", borderRadius: "50%", border: "1px solid var(--border)" }} />
-                </div>
-                {/* Label on hover via CSS */}
-                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "0.75rem 1rem", background: "linear-gradient(to top, rgba(42,28,20,0.7), transparent)", borderRadius: "0 0 12px 12px" }}>
-                  <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.72rem", color: "rgba(240,232,220,0.8)", letterSpacing: "0.05em" }}>
-                    {locale === "id" ? item.label.id : item.label.en}
-                  </span>
-                </div>
-              </button>
-            </AnimateOnScroll>
-          ))}
-        </div>
+        {items.length === 0 ? (
+          <div style={{ borderTop: "1px solid var(--border)", paddingTop: "3rem" }}>
+            <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.85rem", color: "var(--muted)" }}>
+              {locale === "id" ? "Foto galeri akan segera ditambahkan." : "Gallery photos will be added soon."}
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Category filter */}
+            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1.5rem" }}>
+              {cats.map((c) => {
+                const active = filter === c;
+                const count = c === "all" ? items.length : items.filter((g) => g.category === c).length;
+                if (c !== "all" && count === 0) return null;
+                const label = c === "all"
+                  ? (locale === "id" ? `Semua (${count})` : `All (${count})`)
+                  : `${catLabels[c as GalleryItem["category"]][locale as "id" | "en"]} (${count})`;
+                return (
+                  <button key={c} onClick={() => setFilter(c as typeof filter)}
+                    style={{ padding: "0.3rem 0.9rem", borderRadius: "100px", fontFamily: "'Poppins',sans-serif", fontSize: "0.72rem", background: active ? "var(--brown)" : "transparent", color: active ? "var(--cream)" : "var(--muted)", border: active ? "1px solid var(--brown)" : "1px solid var(--border)", cursor: "pointer", transition: "all .2s" }}>
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Grid */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "10px" }}
+              className="gallery-pub-grid">
+              {filtered.map((item, idx) => (
+                <AnimateOnScroll key={item.id} delay={idx * 30}>
+                  <button
+                    onClick={() => setOpen(item)}
+                    style={{ position: "relative", width: "100%", aspectRatio: "1", background: "none", border: "none", padding: 0, cursor: "pointer", borderRadius: "10px", overflow: "hidden", display: "block" }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={item.url}
+                      alt={locale === "id" ? item.captionId : item.captionEn}
+                      loading="lazy"
+                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform .4s" }}
+                      onMouseEnter={(e) => ((e.currentTarget as HTMLImageElement).style.transform = "scale(1.05)")}
+                      onMouseLeave={(e) => ((e.currentTarget as HTMLImageElement).style.transform = "scale(1)")}
+                    />
+                    {/* Label overlay */}
+                    <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "0.5rem 0.6rem", background: "linear-gradient(to top, rgba(42,28,20,0.65), transparent)", opacity: 0, transition: "opacity .3s" }}
+                      onMouseEnter={(e) => ((e.currentTarget as HTMLDivElement).style.opacity = "1")}
+                      onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.opacity = "0")}>
+                      <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "9px", color: "rgba(240,232,220,0.85)" }}>
+                        {locale === "id" ? item.captionId : item.captionEn}
+                      </span>
+                    </div>
+                    {/* Zoom icon on hover */}
+                    <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", opacity: 0, transition: "opacity .2s", pointerEvents: "none" }}>
+                      <ZoomIn size={20} style={{ color: "rgba(255,255,255,0.7)" }} />
+                    </div>
+                  </button>
+                </AnimateOnScroll>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Lightbox */}
       {open && (
         <div
           onClick={() => setOpen(null)}
-          style={{ position: "fixed", inset: 0, zIndex: 50, background: "rgba(20,12,6,0.88)", display: "flex", alignItems: "center", justifyContent: "center", padding: "2rem" }}
+          style={{ position: "fixed", inset: 0, zIndex: 50, background: "rgba(20,12,6,0.92)", display: "flex", alignItems: "center", justifyContent: "center", padding: "2rem" }}
         >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{ position: "relative", width: "100%", maxWidth: "560px", animation: "fadeIn .25s ease-out both" }}
-          >
-            <button
-              onClick={() => setOpen(null)}
-              style={{ position: "absolute", top: "-2.5rem", right: 0, background: "none", border: "none", cursor: "pointer", color: "rgba(240,232,220,0.5)", display: "flex", alignItems: "center", gap: "6px", fontFamily: "'Poppins',sans-serif", fontSize: "0.75rem" }}
-            >
-              <X size={14} /> Close
-            </button>
-            <div className="img-placeholder" style={{ width: "100%", aspectRatio: "4/3", borderRadius: "16px" }}>
-              <div style={{ width: "40px", height: "40px", borderRadius: "50%", border: "1px solid var(--border)" }} />
-              <span style={{ fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase" }}>Photo</span>
-              <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1rem", color: "var(--muted)", marginTop: "0.5rem" }}>
-                {locale === "id" ? open.label.id : open.label.en}
+          <button onClick={() => setOpen(null)}
+            style={{ position: "absolute", top: "1.5rem", right: "1.5rem", background: "none", border: "none", cursor: "pointer", color: "rgba(240,232,220,0.5)", display: "flex", alignItems: "center", gap: "6px", fontFamily: "'Poppins',sans-serif", fontSize: "0.75rem" }}>
+            <X size={16} />
+          </button>
+          <div onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: "800px", width: "100%", animation: "fadeIn .25s ease-out both" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={open.url}
+              alt={locale === "id" ? open.captionId : open.captionEn}
+              style={{ width: "100%", maxHeight: "80vh", objectFit: "contain", borderRadius: "12px", display: "block" }}
+            />
+            {(open.captionId || open.captionEn) && (
+              <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.78rem", color: "rgba(240,232,220,0.6)", textAlign: "center", marginTop: "1rem" }}>
+                {locale === "id" ? open.captionId : open.captionEn}
               </p>
-            </div>
+            )}
           </div>
         </div>
       )}
 
-      <style>{`
-        @media(max-width:768px){
-          .gallery-grid{grid-template-columns:repeat(2,1fr) !important;grid-auto-rows:140px !important;}
-          .col-span-2{grid-column:span 1 !important;}
-          .row-span-2{grid-row:span 1 !important;}
-        }
-      `}</style>
+      <style>{`@media(max-width:768px){.gallery-pub-grid{grid-template-columns:repeat(2,1fr) !important;}}`}</style>
     </section>
   );
 }

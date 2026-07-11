@@ -34,6 +34,10 @@ export function getTestimonials(): Testimonial[] {
   return readFile<Testimonial[]>("testimonials.json", []);
 }
 
+export function getAllTestimonials(): Testimonial[] {
+  return readFile<Testimonial[]>("testimonials.json", []);
+}
+
 export function getApprovedTestimonials(): Testimonial[] {
   return getTestimonials().filter((t) => t.approved);
 }
@@ -43,7 +47,7 @@ export function addTestimonial(data: Omit<Testimonial, "id" | "approved" | "crea
   const item: Testimonial = {
     ...data,
     id: Date.now().toString(),
-    approved: false,
+    approved: true, // langsung approved
     createdAt: new Date().toISOString(),
   };
   all.push(item);
@@ -108,4 +112,21 @@ export function deleteArtisan(id: string) {
 export function checkAdminPassword(password: string): boolean {
   const correct = process.env.ADMIN_PASSWORD ?? "admin123";
   return password === correct;
+}
+
+// ── Gallery ──────────────────────────────────────────
+export function getGallery(): import("./store").GalleryItem[] {
+  return readFile("gallery.json", []);
+}
+
+export function addGalleryItem(data: Omit<import("./store").GalleryItem, "id" | "createdAt">): import("./store").GalleryItem {
+  const all = getGallery();
+  const item = { ...data, id: Date.now().toString(), createdAt: new Date().toISOString() };
+  all.push(item);
+  writeFile("gallery.json", all);
+  return item;
+}
+
+export function deleteGalleryItem(id: string) {
+  writeFile("gallery.json", getGallery().filter((g) => g.id !== id));
 }

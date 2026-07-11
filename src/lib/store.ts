@@ -23,7 +23,7 @@ export interface Product {
   descId: string;
   descEn: string;
   price: number;
-  sizes: string;         // comma-separated
+  sizes: string;
   materialId: string;
   materialEn: string;
   estimasiId: string;
@@ -31,6 +31,7 @@ export interface Product {
   careId: string;
   careEn: string;
   featured: boolean;
+  images: string[];   // array URL gambar
   createdAt: string;
 }
 
@@ -42,6 +43,16 @@ export interface Artisan {
   specialtyEn: string;
   quoteId: string;
   quoteEn: string;
+  image: string;      // URL foto
+  createdAt: string;
+}
+
+export interface GalleryItem {
+  id: string;
+  url: string;
+  captionId: string;
+  captionEn: string;
+  category: "process" | "exhibition" | "artisan" | "product" | "workshop";
   createdAt: string;
 }
 

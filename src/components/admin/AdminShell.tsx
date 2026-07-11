@@ -5,7 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   LayoutDashboard, MessageSquare, ShoppingBag, Users,
-  LogOut, Menu, X, ExternalLink
+  LogOut, Menu, X, ExternalLink, Image
 } from "lucide-react";
 
 const NAV = [
@@ -13,6 +13,7 @@ const NAV = [
   { href: "/admin/testimonials", label: "Testimoni",    icon: MessageSquare   },
   { href: "/admin/products",     label: "Produk",       icon: ShoppingBag     },
   { href: "/admin/artisans",     label: "Pengrajin",    icon: Users           },
+  { href: "/admin/gallery",      label: "Galeri",       icon: Image           },
 ];
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {

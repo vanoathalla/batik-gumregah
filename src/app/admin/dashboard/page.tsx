@@ -3,33 +3,33 @@
 import { useEffect, useState } from "react";
 import AdminShell from "@/components/admin/AdminShell";
 import { useAdmin } from "@/hooks/useAdmin";
-import { MessageSquare, ShoppingBag, Users, Clock } from "lucide-react";
+import { MessageSquare, ShoppingBag, Users, Clock, Image } from "lucide-react";
 
 export default function AdminDashboard() {
   const { apiFetch } = useAdmin();
-  const [stats, setStats] = useState({ testimonials: 0, pending: 0, products: 0, artisans: 0 });
+  const [stats, setStats] = useState({ testimonials: 0, products: 0, artisans: 0, gallery: 0 });
 
   useEffect(() => {
     Promise.all([
       apiFetch("/api/admin/testimonials").then((r) => r.json()),
       apiFetch("/api/admin/products").then((r) => r.json()),
       apiFetch("/api/admin/artisans").then((r) => r.json()),
-    ]).then(([testi, prod, art]) => {
-      const all = Array.isArray(testi) ? testi : [];
+      apiFetch("/api/admin/gallery").then((r) => r.json()),
+    ]).then(([testi, prod, art, gal]) => {
       setStats({
-        testimonials: all.filter((t: { approved: boolean }) => t.approved).length,
-        pending: all.filter((t: { approved: boolean }) => !t.approved).length,
-        products: Array.isArray(prod) ? prod.length : 0,
-        artisans: Array.isArray(art) ? art.length : 0,
+        testimonials: Array.isArray(testi) ? testi.length : 0,
+        products:     Array.isArray(prod)  ? prod.length  : 0,
+        artisans:     Array.isArray(art)   ? art.length   : 0,
+        gallery:      Array.isArray(gal)   ? gal.length   : 0,
       });
     });
   }, [apiFetch]);
 
   const cards = [
-    { label: "Testimoni Aktif", value: stats.testimonials, icon: MessageSquare, color: "#B89660" },
-    { label: "Menunggu Review", value: stats.pending, icon: Clock, color: "#A85440" },
-    { label: "Produk",          value: stats.products, icon: ShoppingBag, color: "#5D7A52" },
-    { label: "Pengrajin",       value: stats.artisans, icon: Users, color: "#6B4C3B" },
+    { label: "Testimoni",  value: stats.testimonials, icon: MessageSquare, color: "#B89660" },
+    { label: "Produk",     value: stats.products,     icon: ShoppingBag,   color: "#5D7A52" },
+    { label: "Pengrajin",  value: stats.artisans,     icon: Users,         color: "#6B4C3B" },
+    { label: "Foto Galeri",value: stats.gallery,      icon: Image,         color: "#7A6A8A" },
   ];
 
   return (
@@ -62,10 +62,10 @@ export default function AdminDashboard() {
             Panduan Cepat
           </p>
           {[
-            { step: "01", text: "Buka menu Testimoni untuk approve ulasan dari pelanggan" },
-            { step: "02", text: "Buka menu Produk untuk menambah atau mengedit koleksi" },
-            { step: "03", text: "Buka menu Pengrajin untuk menambah profil pengrajin" },
-            { step: "04", text: "Semua perubahan langsung muncul di website utama" },
+            { step: "01", text: "Buka menu Produk untuk menambah koleksi beserta foto" },
+            { step: "02", text: "Buka menu Pengrajin untuk menambah profil dan foto pengrajin" },
+            { step: "03", text: "Buka menu Galeri untuk upload foto workshop, proses, dan pameran" },
+            { step: "04", text: "Buka menu Testimoni untuk melihat ulasan dari pelanggan" },
           ].map(({ step, text }) => (
             <div key={step} style={{ display: "flex", gap: "1rem", alignItems: "start", paddingBottom: "0.85rem", marginBottom: "0.85rem", borderBottom: "1px solid rgba(184,150,96,0.1)" }}>
               <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1rem", fontWeight: 600, color: "#B89660", flexShrink: 0 }}>{step}</span>

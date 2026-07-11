@@ -1,11 +1,20 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import AnimateOnScroll from "@/components/ui/AnimateOnScroll";
-import { artisans } from "@/lib/data";
+import type { Artisan } from "@/lib/store";
 
 export default function ArtisansSection() {
   const { t, locale } = useLanguage();
+  const [artisans, setArtisans] = useState<Artisan[]>([]);
+
+  useEffect(() => {
+    fetch("/api/artisans")
+      .then((r) => r.json())
+      .then((d) => Array.isArray(d) && setArtisans(d))
+      .catch(() => {});
+  }, []);
 
   return (
     <section style={{ background: "var(--cream-2)", padding: "6rem 0" }}>
@@ -25,8 +34,7 @@ export default function ArtisansSection() {
         </AnimateOnScroll>
 
         {artisans.length === 0 ? (
-          /* Empty state — data belum tersedia */
-          <div style={{ borderTop: "1px solid var(--border)", paddingTop: "3rem", textAlign: "center" }}>
+          <div style={{ borderTop: "1px solid var(--border)", paddingTop: "3rem" }}>
             <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.85rem", color: "var(--muted)", lineHeight: 1.8 }}>
               {locale === "id"
                 ? "Profil pengrajin akan segera ditambahkan."
@@ -37,9 +45,8 @@ export default function ArtisansSection() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "3rem" }}
             className="artisan-grid">
             {artisans.map((a, idx) => (
-              <AnimateOnScroll key={a.name} delay={idx * 80}>
+              <AnimateOnScroll key={a.id} delay={idx * 80}>
                 <div style={{ textAlign: "center" }}>
-                  {/* Avatar placeholder */}
                   <div className="img-placeholder" style={{ width: "100px", height: "100px", borderRadius: "50%", margin: "0 auto 1.25rem" }}>
                     <div style={{ width: "32px", height: "32px", borderRadius: "50%", border: "1px solid var(--border)" }} />
                   </div>
@@ -47,11 +54,16 @@ export default function ArtisansSection() {
                     {a.name}
                   </p>
                   <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.72rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "1rem" }}>
-                    {locale === "id" ? a.specialty.id : a.specialty.en}
+                    {locale === "id" ? a.specialtyId : a.specialtyEn}
                   </p>
-                  <blockquote style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "1rem", color: "var(--muted)", lineHeight: 1.65, maxWidth: "240px", margin: "0 auto" }}>
-                    "{locale === "id" ? a.quote.id : a.quote.en}"
-                  </blockquote>
+                  <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.75rem", color: "var(--muted)" }}>
+                    {a.experience} {locale === "id" ? "tahun pengalaman" : "years experience"}
+                  </p>
+                  {(a.quoteId || a.quoteEn) && (
+                    <blockquote style={{ fontFamily: "'Cormorant Garamond',serif", fontStyle: "italic", fontSize: "1rem", color: "var(--muted)", lineHeight: 1.65, maxWidth: "240px", margin: "0.75rem auto 0" }}>
+                      "{locale === "id" ? a.quoteId : a.quoteEn}"
+                    </blockquote>
+                  )}
                 </div>
               </AnimateOnScroll>
             ))}

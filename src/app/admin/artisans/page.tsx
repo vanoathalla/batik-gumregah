@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import AdminShell from "@/components/admin/AdminShell";
+import ImageUpload from "@/components/admin/ImageUpload";
 import { useAdmin } from "@/hooks/useAdmin";
 import { Plus, Trash2, Pencil, X, Check } from "lucide-react";
 import type { Artisan } from "@/lib/store";
 
 const EMPTY: Omit<Artisan, "id" | "createdAt"> = {
-  name: "", experience: 1, specialtyId: "", specialtyEn: "", quoteId: "", quoteEn: "",
+  name: "", experience: 1, specialtyId: "", specialtyEn: "",
+  quoteId: "", quoteEn: "", image: "",
 };
 
 export default function AdminArtisans() {
@@ -21,7 +23,7 @@ export default function AdminArtisans() {
 
   const load = async () => {
     setLoading(true);
-    const res = await apiFetch("/api/admin/artisans");
+    const res  = await apiFetch("/api/admin/artisans");
     const data = await res.json();
     if (Array.isArray(data)) setList(data);
     setLoading(false);
@@ -33,6 +35,7 @@ export default function AdminArtisans() {
   const openEdit = (a: Artisan) => { setEditing(a); setForm({ ...a }); setShowForm(true); };
 
   const save = async () => {
+    if (!form.name.trim()) return alert("Nama wajib diisi.");
     setSaving(true);
     if (editing) {
       await apiFetch("/api/admin/artisans", { method: "PATCH", body: JSON.stringify({ id: editing.id, ...form }) });
@@ -50,11 +53,17 @@ export default function AdminArtisans() {
     load();
   };
 
-  const inp = (placeholder: string, key: keyof typeof EMPTY, type = "text") => (
+  const inp: React.CSSProperties = {
+    width: "100%", padding: "0.65rem 0.85rem", borderRadius: "8px",
+    border: "1px solid rgba(184,150,96,0.25)", background: "#fff",
+    fontFamily: "'Poppins',sans-serif", fontSize: "0.8rem", color: "#3D2B1F", outline: "none",
+  };
+
+  const field = (placeholder: string, key: keyof typeof EMPTY, type = "text") => (
     <input type={type} placeholder={placeholder}
       value={form[key] as string | number}
       onChange={(e) => setForm({ ...form, [key]: type === "number" ? Number(e.target.value) : e.target.value })}
-      style={{ width: "100%", padding: "0.65rem 0.85rem", borderRadius: "8px", border: "1px solid rgba(184,150,96,0.25)", background: "#fff", fontFamily: "'Poppins',sans-serif", fontSize: "0.8rem", color: "#3D2B1F", outline: "none" }}
+      style={inp}
       onFocus={(e) => (e.target.style.borderColor = "#B89660")}
       onBlur={(e) => (e.target.style.borderColor = "rgba(184,150,96,0.25)")}
     />
@@ -78,16 +87,24 @@ export default function AdminArtisans() {
           <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.82rem", color: "#9A8070" }}>Memuat...</p>
         ) : list.length === 0 ? (
           <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.82rem", color: "#9A8070" }}>
-            Belum ada pengrajin. Klik "Tambah Pengrajin" untuk memulai.
+            Belum ada pengrajin. Klik "Tambah Pengrajin" untuk mulai.
           </p>
         ) : (
           <div>
             {list.map((a) => (
-              <div key={a.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", paddingTop: "1rem", paddingBottom: "1rem", borderBottom: "1px solid rgba(184,150,96,0.12)" }}>
+              <div key={a.id} style={{ display: "flex", alignItems: "center", gap: "1rem", paddingTop: "1rem", paddingBottom: "1rem", borderBottom: "1px solid rgba(184,150,96,0.12)" }}>
+                <div style={{ width: "44px", height: "44px", borderRadius: "50%", overflow: "hidden", flexShrink: 0, background: "#EEE8DF", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {a.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={a.image} alt={a.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ) : (
+                    <span style={{ fontSize: "9px", color: "#B8A898" }}>No img</span>
+                  )}
+                </div>
                 <div style={{ flex: 1 }}>
                   <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.85rem", fontWeight: 600, color: "#3D2B1F" }}>{a.name}</p>
-                  <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.75rem", color: "#B89660", marginTop: "0.15rem" }}>
-                    {a.specialtyId} &bull; {a.experience} tahun pengalaman
+                  <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.75rem", color: "#B89660", marginTop: "0.1rem" }}>
+                    {a.specialtyId || a.specialtyEn} &bull; {a.experience} tahun
                   </p>
                 </div>
                 <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -110,7 +127,7 @@ export default function AdminArtisans() {
         <div onClick={() => setShowForm(false)}
           style={{ position: "fixed", inset: 0, zIndex: 50, background: "rgba(20,12,6,0.6)", display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem", backdropFilter: "blur(4px)" }}>
           <div onClick={(e) => e.stopPropagation()}
-            style={{ background: "#F7F3EE", borderRadius: "16px", width: "100%", maxWidth: "480px", maxHeight: "85vh", overflowY: "auto", padding: "2rem", animation: "fadeUp .3s ease-out both" }}>
+            style={{ background: "#F7F3EE", borderRadius: "16px", width: "100%", maxWidth: "480px", maxHeight: "88vh", overflowY: "auto", padding: "2rem", animation: "fadeUp .3s ease-out both" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
               <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1.3rem", fontWeight: 600, color: "#3D2B1F" }}>
                 {editing ? "Edit Pengrajin" : "Tambah Pengrajin"}
@@ -120,14 +137,20 @@ export default function AdminArtisans() {
               </button>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-              {inp("Nama Lengkap *", "name")}
-              {inp("Pengalaman (tahun) *", "experience", "number")}
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+              <ImageUpload
+                folder="artisans"
+                value={form.image}
+                onChange={(url) => setForm({ ...form, image: url })}
+                label="Foto Pengrajin"
+              />
+              {field("Nama Lengkap *", "name")}
+              {field("Pengalaman (tahun)", "experience", "number")}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
-                {inp("Keahlian (Indonesia)", "specialtyId")}
-                {inp("Specialty (English)", "specialtyEn")}
-                {inp("Quote (Indonesia)", "quoteId")}
-                {inp("Quote (English)", "quoteEn")}
+                {field("Keahlian (Indonesia)", "specialtyId")}
+                {field("Specialty (English)", "specialtyEn")}
+                {field("Quote (Indonesia)", "quoteId")}
+                {field("Quote (English)", "quoteEn")}
               </div>
             </div>
 

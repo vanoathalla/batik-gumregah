@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import AdminShell from "@/components/admin/AdminShell";
+import MultiImageUpload from "@/components/admin/MultiImageUpload";
 import { useAdmin } from "@/hooks/useAdmin";
 import { Plus, Trash2, Pencil, X, Check } from "lucide-react";
 import type { Product } from "@/lib/store";
@@ -10,23 +11,23 @@ import { CATEGORIES } from "@/lib/store";
 const EMPTY: Omit<Product, "id" | "createdAt"> = {
   category: "Batik Tulis", motif: "", nameId: "", nameEn: "",
   descId: "", descEn: "", price: 0, sizes: "", materialId: "", materialEn: "",
-  estimasiId: "", estimasiEn: "", careId: "", careEn: "", featured: false,
+  estimasiId: "", estimasiEn: "", careId: "", careEn: "", featured: false, images: [],
 };
 
 const fmt = (n: number) => new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(n);
 
 export default function AdminProducts() {
   const { apiFetch } = useAdmin();
-  const [list, setList]   = useState<Product[]>([]);
+  const [list, setList]     = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<Product | null>(null);
-  const [form, setForm]   = useState(EMPTY);
+  const [form, setForm]     = useState<Omit<Product, "id" | "createdAt">>(EMPTY);
   const [saving, setSaving] = useState(false);
 
   const load = async () => {
     setLoading(true);
-    const res = await apiFetch("/api/admin/products");
+    const res  = await apiFetch("/api/admin/products");
     const data = await res.json();
     if (Array.isArray(data)) setList(data);
     setLoading(false);
@@ -38,6 +39,7 @@ export default function AdminProducts() {
   const openEdit = (p: Product) => { setEditing(p); setForm({ ...p }); setShowForm(true); };
 
   const save = async () => {
+    if (!form.nameId && !form.nameEn) return alert("Nama produk wajib diisi.");
     setSaving(true);
     if (editing) {
       await apiFetch("/api/admin/products", { method: "PATCH", body: JSON.stringify({ id: editing.id, ...form }) });
@@ -55,17 +57,21 @@ export default function AdminProducts() {
     load();
   };
 
-  const inp = (placeholder: string, key: keyof typeof EMPTY, type = "text"): React.ReactNode => (
-    <input
-      type={type}
-      placeholder={placeholder}
+  const field = (placeholder: string, key: keyof Omit<Product,"id"|"createdAt"|"featured"|"images">, type = "text") => (
+    <input type={type} placeholder={placeholder}
       value={form[key] as string | number}
       onChange={(e) => setForm({ ...form, [key]: type === "number" ? Number(e.target.value) : e.target.value })}
-      style={{ width: "100%", padding: "0.65rem 0.85rem", borderRadius: "8px", border: "1px solid rgba(184,150,96,0.25)", background: "#fff", fontFamily: "'Poppins',sans-serif", fontSize: "0.8rem", color: "#3D2B1F", outline: "none" }}
+      style={inp}
       onFocus={(e) => (e.target.style.borderColor = "#B89660")}
       onBlur={(e) => (e.target.style.borderColor = "rgba(184,150,96,0.25)")}
     />
   );
+
+  const inp: React.CSSProperties = {
+    width: "100%", padding: "0.65rem 0.85rem", borderRadius: "8px",
+    border: "1px solid rgba(184,150,96,0.25)", background: "#fff",
+    fontFamily: "'Poppins',sans-serif", fontSize: "0.8rem", color: "#3D2B1F", outline: "none",
+  };
 
   return (
     <AdminShell>
@@ -84,20 +90,29 @@ export default function AdminProducts() {
         {loading ? (
           <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.82rem", color: "#9A8070" }}>Memuat...</p>
         ) : list.length === 0 ? (
-          <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.82rem", color: "#9A8070", paddingBottom: "2rem", borderBottom: "1px solid rgba(184,150,96,0.12)" }}>
-            Belum ada produk. Klik "Tambah Produk" untuk memulai.
+          <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.82rem", color: "#9A8070" }}>
+            Belum ada produk. Klik "Tambah Produk" untuk mulai.
           </p>
         ) : (
           <div>
             {list.map((p) => (
-              <div key={p.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", paddingTop: "1rem", paddingBottom: "1rem", borderBottom: "1px solid rgba(184,150,96,0.12)" }}>
+              <div key={p.id} style={{ display: "flex", alignItems: "center", gap: "1rem", paddingTop: "1rem", paddingBottom: "1rem", borderBottom: "1px solid rgba(184,150,96,0.12)" }}>
+                {/* Thumbnail */}
+                <div style={{ width: "56px", height: "48px", borderRadius: "8px", overflow: "hidden", flexShrink: 0, background: "#EEE8DF", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {p.images?.[0] ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={p.images[0]} alt={p.nameId} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ) : (
+                    <span style={{ fontSize: "9px", color: "#B8A898" }}>No img</span>
+                  )}
+                </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
                     <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.85rem", fontWeight: 600, color: "#3D2B1F" }}>{p.nameId || p.nameEn}</p>
                     <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.7rem", color: "#B89660" }}>{p.category}</span>
-                    {p.featured && <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.7rem", color: "#5D7A52" }}>Featured</span>}
+                    {p.featured && <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.7rem", color: "#5D7A52", background: "rgba(93,122,82,0.1)", padding: "1px 7px", borderRadius: "100px" }}>Featured</span>}
                   </div>
-                  <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.78rem", color: "#9A8070", marginTop: "0.2rem" }}>{fmt(p.price)}</p>
+                  <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.75rem", color: "#9A8070", marginTop: "0.15rem" }}>{fmt(p.price)} · {p.images?.length ?? 0} foto</p>
                 </div>
                 <div style={{ display: "flex", gap: "0.5rem" }}>
                   <button onClick={() => openEdit(p)}
@@ -120,7 +135,8 @@ export default function AdminProducts() {
         <div onClick={() => setShowForm(false)}
           style={{ position: "fixed", inset: 0, zIndex: 50, background: "rgba(20,12,6,0.6)", display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem", backdropFilter: "blur(4px)" }}>
           <div onClick={(e) => e.stopPropagation()}
-            style={{ background: "#F7F3EE", borderRadius: "16px", width: "100%", maxWidth: "560px", maxHeight: "88vh", overflowY: "auto", padding: "2rem", animation: "fadeUp .3s ease-out both" }}>
+            style={{ background: "#F7F3EE", borderRadius: "16px", width: "100%", maxWidth: "580px", maxHeight: "90vh", overflowY: "auto", padding: "2rem", animation: "fadeUp .3s ease-out both" }}>
+
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
               <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1.3rem", fontWeight: 600, color: "#3D2B1F" }}>
                 {editing ? "Edit Produk" : "Tambah Produk"}
@@ -130,31 +146,41 @@ export default function AdminProducts() {
               </button>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+
+              {/* Upload foto */}
+              <MultiImageUpload
+                folder="products"
+                values={form.images ?? []}
+                onChange={(urls) => setForm({ ...form, images: urls })}
+                label="Foto Produk (maks 5)"
+                max={5}
+              />
+
               {/* Category */}
               <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}
-                style={{ width: "100%", padding: "0.65rem 0.85rem", borderRadius: "8px", border: "1px solid rgba(184,150,96,0.25)", background: "#fff", fontFamily: "'Poppins',sans-serif", fontSize: "0.8rem", color: "#3D2B1F", outline: "none", cursor: "pointer" }}>
+                style={{ ...inp, cursor: "pointer" }}>
                 {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
-                {inp("Nama (Indonesia) *", "nameId")}
-                {inp("Name (English) *", "nameEn")}
+                {field("Nama (Indonesia) *", "nameId")}
+                {field("Name (English)", "nameEn")}
               </div>
-              {inp("Motif *", "motif")}
+              {field("Motif", "motif")}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
-                {inp("Deskripsi (ID)", "descId")}
-                {inp("Description (EN)", "descEn")}
+                {field("Deskripsi (ID)", "descId")}
+                {field("Description (EN)", "descEn")}
               </div>
-              {inp("Harga (Rp) *", "price", "number")}
-              {inp("Ukuran (pisah koma, cth: S, M, L)", "sizes")}
+              {field("Harga (Rp)", "price", "number")}
+              {field("Ukuran (pisah koma, cth: S, M, L atau 2.4mx1.1m)", "sizes")}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
-                {inp("Material (ID)", "materialId")}
-                {inp("Material (EN)", "materialEn")}
-                {inp("Estimasi (ID, cth: 7-14 hari)", "estimasiId")}
-                {inp("Estimation (EN)", "estimasiEn")}
-                {inp("Perawatan (ID)", "careId")}
-                {inp("Care (EN)", "careEn")}
+                {field("Material (ID)", "materialId")}
+                {field("Material (EN)", "materialEn")}
+                {field("Estimasi (ID, cth: 7-14 hari)", "estimasiId")}
+                {field("Estimation (EN)", "estimasiEn")}
+                {field("Cara Perawatan (ID)", "careId")}
+                {field("Care Instructions (EN)", "careEn")}
               </div>
               <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontFamily: "'Poppins',sans-serif", fontSize: "0.8rem", color: "#7A6A5A", cursor: "pointer" }}>
                 <input type="checkbox" checked={form.featured} onChange={(e) => setForm({ ...form, featured: e.target.checked })} />
