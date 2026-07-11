@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 import { getAllTestimonials, addTestimonial } from "@/lib/db";
 import { COUNTRY_FLAGS } from "@/lib/store";
