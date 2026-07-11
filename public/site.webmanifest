@@ -1,0 +1,16 @@
+{
+  "name": "Batik Gumregah",
+  "short_name": "Batik Gumregah",
+  "description": "Handcrafted batik from Kanten Village, Imogiri, Yogyakarta",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8F5F0",
+  "theme_color": "#4E342E",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}
