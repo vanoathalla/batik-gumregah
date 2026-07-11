@@ -2,7 +2,26 @@
 
 import { useLanguage } from "@/context/LanguageContext";
 import AnimateOnScroll from "@/components/ui/AnimateOnScroll";
-import { MessageSquare, Mail, Instagram, ArrowUpRight } from "lucide-react";
+import { MessageSquare, Mail, ArrowUpRight } from "lucide-react";
+
+// Custom SVG icon for Instagram since brand icons are not packaged in this project's lucide-react
+const InstagramIcon = ({ size = 24 }: { size?: number }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+  </svg>
+);
 
 export default function ContactSection() {
   const { t, locale } = useLanguage();
@@ -31,7 +50,7 @@ export default function ContactSection() {
       label: "Instagram",
       value: `@${contactInfo.instagram}`,
       href: `https://instagram.com/${contactInfo.instagram}`,
-      Icon: Instagram,
+      Icon: InstagramIcon,
       sub: locale === "id" ? "Koleksi terbaru & update" : "Latest collections & updates"
     }
   ];
@@ -42,46 +61,48 @@ export default function ContactSection() {
         <div style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: "5rem" }} className="contact-grid">
           
           {/* Sisi Kiri: Deskripsi & Saluran Sekunder */}
-          <AnimateOnScroll direction="left" style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-            <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "10px", letterSpacing: "0.35em", textTransform: "uppercase", color: "var(--gold)" }}>
-              {t.contact.sectionLabel}
-            </span>
-            <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(1.9rem,3.5vw,3rem)", fontWeight: 500, color: "var(--brown)", marginTop: "0.5rem", marginBottom: "1.25rem" }}>
-              {t.contact.title}
-            </h2>
-            <span className="rule-gold" />
-            <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.875rem", color: "var(--muted)", marginTop: "1.25rem", maxWidth: "480px", lineHeight: 1.85, marginBottom: "2.5rem" }}>
-              {t.contact.subtitle}
-            </p>
+          <AnimateOnScroll direction="left">
+            <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+              <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "10px", letterSpacing: "0.35em", textTransform: "uppercase", color: "var(--gold)" }}>
+                {t.contact.sectionLabel}
+              </span>
+              <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(1.9rem,3.5vw,3rem)", fontWeight: 500, color: "var(--brown)", marginTop: "0.5rem", marginBottom: "1.25rem" }}>
+                {t.contact.title}
+              </h2>
+              <span className="rule-gold" />
+              <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.875rem", color: "var(--muted)", marginTop: "1.25rem", maxWidth: "480px", lineHeight: 1.85, marginBottom: "2.5rem" }}>
+                {t.contact.subtitle}
+              </p>
 
-            {/* Email & Instagram List */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem", maxWidth: "440px" }}>
-              {secondaryChannels.map(({ label, value, href, Icon, sub }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ display: "flex", alignItems: "center", gap: "1.25rem", padding: "1.25rem", borderRadius: "12px", border: "1px solid var(--border)", background: "var(--cream)", textDecoration: "none", transition: "all .3s ease" }}
-                  className="contact-card-hover"
-                >
-                  <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "rgba(184, 150, 96, 0.08)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--gold)", flexShrink: 0 }}>
-                    <Icon size={18} />
-                  </div>
-                  <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "0.15rem" }}>
-                    <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "9px", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--gold)", fontWeight: 600 }}>
-                      {label}
-                    </span>
-                    <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.85rem", fontWeight: 500, color: "var(--brown)" }}>
-                      {value}
-                    </span>
-                    <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.72rem", color: "var(--muted)" }}>
-                      {sub}
-                    </span>
-                  </div>
-                  <ArrowUpRight size={16} style={{ color: "var(--muted)", opacity: 0.6 }} />
-                </a>
-              ))}
+              {/* Email & Instagram List */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem", maxWidth: "440px" }}>
+                {secondaryChannels.map(({ label, value, href, Icon, sub }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ display: "flex", alignItems: "center", gap: "1.25rem", padding: "1.25rem", borderRadius: "12px", border: "1px solid var(--border)", background: "var(--cream)", textDecoration: "none", transition: "all .3s ease" }}
+                    className="contact-card-hover"
+                  >
+                    <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "rgba(184, 150, 96, 0.08)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--gold)", flexShrink: 0 }}>
+                      <Icon size={18} />
+                    </div>
+                    <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "0.15rem" }}>
+                      <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "9px", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--gold)", fontWeight: 600 }}>
+                        {label}
+                      </span>
+                      <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.85rem", fontWeight: 500, color: "var(--brown)" }}>
+                        {value}
+                      </span>
+                      <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.72rem", color: "var(--muted)" }}>
+                        {sub}
+                      </span>
+                    </div>
+                    <ArrowUpRight size={16} style={{ color: "var(--muted)", opacity: 0.6 }} />
+                  </a>
+                ))}
+              </div>
             </div>
           </AnimateOnScroll>
 
