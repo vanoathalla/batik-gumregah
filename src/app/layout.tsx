@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { ThemeProvider } from "@/context/ThemeContext";
-import ConditionalLayout from "@/components/layout/ConditionalLayout";
 
 export const metadata: Metadata = {
   title: {
@@ -79,9 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ThemeProvider>
           <LanguageProvider>
-            <ConditionalLayout>
-              {children}
-            </ConditionalLayout>
+            {children}
           </LanguageProvider>
         </ThemeProvider>
       </body>
