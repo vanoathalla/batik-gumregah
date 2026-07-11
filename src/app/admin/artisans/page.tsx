@@ -37,20 +37,38 @@ export default function AdminArtisans() {
   const save = async () => {
     if (!form.name.trim()) return alert("Nama wajib diisi.");
     setSaving(true);
-    if (editing) {
-      await apiFetch("/api/admin/artisans", { method: "PATCH", body: JSON.stringify({ id: editing.id, ...form }) });
-    } else {
-      await apiFetch("/api/admin/artisans", { method: "POST", body: JSON.stringify(form) });
+    try {
+      const res = editing
+        ? await apiFetch("/api/admin/artisans", { method: "PATCH", body: JSON.stringify({ id: editing.id, ...form }) })
+        : await apiFetch("/api/admin/artisans", { method: "POST", body: JSON.stringify(form) });
+      
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        alert(`Gagal menyimpan pengrajin: ${errorData.error || res.statusText || "Terjadi kesalahan"}`);
+      } else {
+        setShowForm(false);
+        load();
+      }
+    } catch {
+      alert("Gagal menghubungi server. Periksa koneksi Anda.");
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
-    setShowForm(false);
-    load();
   };
 
   const remove = async (id: string) => {
     if (!confirm("Hapus pengrajin ini?")) return;
-    await apiFetch("/api/admin/artisans", { method: "DELETE", body: JSON.stringify({ id }) });
-    load();
+    try {
+      const res = await apiFetch("/api/admin/artisans", { method: "DELETE", body: JSON.stringify({ id }) });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        alert(`Gagal menghapus pengrajin: ${errorData.error || res.statusText || "Terjadi kesalahan"}`);
+      } else {
+        load();
+      }
+    } catch {
+      alert("Gagal menghubungi server.");
+    }
   };
 
   const inp: React.CSSProperties = {

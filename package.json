@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.10",
+    "@neondatabase/serverless": "^1.1.0",
+    "@supabase/supabase-js": "^2.110.2",
     "@tailwindcss/typography": "^0.5.20",
+    "@vercel/blob": "^2.6.1",
     "framer-motion": "^12.42.2",
     "lucide-react": "^1.24.0",
     "next": "16.2.10",

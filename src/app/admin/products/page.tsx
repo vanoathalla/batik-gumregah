@@ -41,20 +41,38 @@ export default function AdminProducts() {
   const save = async () => {
     if (!form.nameId && !form.nameEn) return alert("Nama produk wajib diisi.");
     setSaving(true);
-    if (editing) {
-      await apiFetch("/api/admin/products", { method: "PATCH", body: JSON.stringify({ id: editing.id, ...form }) });
-    } else {
-      await apiFetch("/api/admin/products", { method: "POST", body: JSON.stringify(form) });
+    try {
+      const res = editing
+        ? await apiFetch("/api/admin/products", { method: "PATCH", body: JSON.stringify({ id: editing.id, ...form }) })
+        : await apiFetch("/api/admin/products", { method: "POST", body: JSON.stringify(form) });
+      
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        alert(`Gagal menyimpan produk: ${errorData.error || res.statusText || "Terjadi kesalahan"}`);
+      } else {
+        setShowForm(false);
+        load();
+      }
+    } catch {
+      alert("Gagal menghubungi server. Periksa koneksi Anda.");
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
-    setShowForm(false);
-    load();
   };
 
   const remove = async (id: string) => {
     if (!confirm("Hapus produk ini?")) return;
-    await apiFetch("/api/admin/products", { method: "DELETE", body: JSON.stringify({ id }) });
-    load();
+    try {
+      const res = await apiFetch("/api/admin/products", { method: "DELETE", body: JSON.stringify({ id }) });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        alert(`Gagal menghapus produk: ${errorData.error || res.statusText || "Terjadi kesalahan"}`);
+      } else {
+        load();
+      }
+    } catch {
+      alert("Gagal menghubungi server.");
+    }
   };
 
   const field = (placeholder: string, key: keyof Omit<Product,"id"|"createdAt"|"featured"|"images">, type = "text") => (

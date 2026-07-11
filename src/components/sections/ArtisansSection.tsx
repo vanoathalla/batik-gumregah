@@ -47,8 +47,15 @@ export default function ArtisansSection() {
             {artisans.map((a, idx) => (
               <AnimateOnScroll key={a.id} delay={idx * 80}>
                 <div style={{ textAlign: "center" }}>
-                  <div className="img-placeholder" style={{ width: "100px", height: "100px", borderRadius: "50%", margin: "0 auto 1.25rem" }}>
-                    <div style={{ width: "32px", height: "32px", borderRadius: "50%", border: "1px solid var(--border)" }} />
+                  <div style={{ width: "100px", height: "100px", borderRadius: "50%", margin: "0 auto 1.25rem", overflow: "hidden", background: "var(--cream)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    {a.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={a.image} alt={a.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    ) : (
+                      <div className="img-placeholder" style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <div style={{ width: "32px", height: "32px", borderRadius: "50%", border: "1px solid var(--border)" }} />
+                      </div>
+                    )}
                   </div>
                   <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1.2rem", fontWeight: 600, color: "var(--brown)", marginBottom: "0.25rem" }}>
                     {a.name}

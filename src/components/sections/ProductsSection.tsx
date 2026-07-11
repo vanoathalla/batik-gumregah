@@ -102,9 +102,16 @@ export default function ProductsSection() {
                 <AnimateOnScroll key={p.id} delay={idx * 50}>
                   <div onClick={() => setSel(p)}
                     style={{ cursor: "pointer", borderBottom: "1px solid var(--border)", paddingBottom: "1.5rem" }}>
-                    <div className="img-placeholder" style={{ height: "220px", borderRadius: "12px", marginBottom: "1rem" }}>
-                      <div style={{ width: "36px", height: "36px", borderRadius: "50%", border: "1px solid var(--border)" }} />
-                      <span style={{ fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase" }}>Photo</span>
+                    <div style={{ height: "220px", borderRadius: "12px", marginBottom: "1rem", overflow: "hidden", background: "var(--cream-2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      {p.images?.[0] ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={p.images[0]} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      ) : (
+                        <div className="img-placeholder" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                          <div style={{ width: "36px", height: "36px", borderRadius: "50%", border: "1px solid var(--border)" }} />
+                          <span style={{ fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase" }}>Photo</span>
+                        </div>
+                      )}
                     </div>
                     <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "10px", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "0.3rem" }}>
                       {p.category}{p.motif ? ` · ${p.motif}` : ""}
@@ -142,9 +149,16 @@ export default function ProductsSection() {
             style={{ position: "fixed", inset: 0, zIndex: 50, background: "rgba(20,12,6,0.75)", display: "flex", alignItems: "flex-end", justifyContent: "center", backdropFilter: "blur(4px)" }}>
             <div onClick={(e) => e.stopPropagation()}
               style={{ background: "var(--cream)", borderRadius: "20px 20px 0 0", width: "100%", maxWidth: "500px", maxHeight: "88vh", overflowY: "auto", animation: "fadeUp .3s ease-out both" }}>
-              <div className="img-placeholder" style={{ height: "220px", borderRadius: "20px 20px 0 0" }}>
-                <div style={{ width: "40px", height: "40px", borderRadius: "50%", border: "1px solid var(--border)" }} />
-                <span style={{ fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase" }}>Photo</span>
+              <div style={{ height: "220px", borderRadius: "20px 20px 0 0", overflow: "hidden", background: "var(--cream-2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {sel.images?.[0] ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={sel.images[0]} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                ) : (
+                  <div className="img-placeholder" style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                    <div style={{ width: "40px", height: "40px", borderRadius: "50%", border: "1px solid var(--border)" }} />
+                    <span style={{ fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase" }}>Photo</span>
+                  </div>
+                )}
               </div>
               <div style={{ padding: "1.75rem" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "1rem" }}>

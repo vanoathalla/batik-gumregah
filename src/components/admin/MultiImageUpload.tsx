@@ -18,13 +18,20 @@ export default function MultiImageUpload({ folder, values, onChange, max = 5, la
   const [uploading, setUploading] = useState(false);
   const [err, setErr] = useState("");
 
-  const uploadFile = async (file: File): Promise<string | null> => {
-    const form = new FormData();
-    form.append("file", file);
-    form.append("folder", folder);
-    const res = await apiFetch("/api/admin/upload", { method: "POST", body: form, headers: {} });
-    const data = await res.json();
-    return res.ok ? data.url : null;
+  const uploadFile = async (file: File): Promise<{ url: string | null; error?: string }> => {
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      form.append("folder", folder);
+      const res = await apiFetch("/api/admin/upload", { method: "POST", body: form, headers: {} });
+      const data = await res.json();
+      if (!res.ok) {
+        return { url: null, error: data.error || "Gagal mengunggah foto." };
+      }
+      return { url: data.url };
+    } catch {
+      return { url: null, error: "Kesalahan jaringan saat mengunggah foto." };
+    }
   };
 
   const handleFiles = async (files: FileList) => {
@@ -32,9 +39,19 @@ export default function MultiImageUpload({ folder, values, onChange, max = 5, la
     setErr("");
     setUploading(true);
     const results: string[] = [];
+    let uploadError = "";
+
     for (const file of Array.from(files).slice(0, max - values.length)) {
-      const url = await uploadFile(file);
-      if (url) results.push(url);
+      const res = await uploadFile(file);
+      if (res.url) {
+        results.push(res.url);
+      } else if (res.error) {
+        uploadError = res.error;
+      }
+    }
+
+    if (uploadError) {
+      setErr(uploadError);
     }
     onChange([...values, ...results]);
     setUploading(false);

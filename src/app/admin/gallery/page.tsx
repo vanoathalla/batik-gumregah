@@ -39,19 +39,45 @@ export default function AdminGallery() {
   const handleFiles = async (files: FileList) => {
     setErr("");
     setUploading(true);
-    for (const file of Array.from(files)) {
-      const form = new FormData();
-      form.append("file", file);
-      form.append("folder", "gallery");
-      const uploadRes = await apiFetch("/api/admin/upload", { method: "POST", body: form, headers: {} });
-      const uploadData = await uploadRes.json();
-      if (!uploadRes.ok) { setErr(uploadData.error ?? "Upload gagal"); continue; }
+    let successCount = 0;
+    let failCount = 0;
+    let lastError = "";
 
-      await apiFetch("/api/admin/gallery", {
-        method: "POST",
-        body: JSON.stringify({ url: uploadData.url, captionId, captionEn, category }),
-      });
+    for (const file of Array.from(files)) {
+      try {
+        const form = new FormData();
+        form.append("file", file);
+        form.append("folder", "gallery");
+        const uploadRes = await apiFetch("/api/admin/upload", { method: "POST", body: form, headers: {} });
+        const uploadData = await uploadRes.json();
+        if (!uploadRes.ok) {
+          lastError = uploadData.error ?? "Upload gambar gagal";
+          failCount++;
+          continue;
+        }
+
+        const res = await apiFetch("/api/admin/gallery", {
+          method: "POST",
+          body: JSON.stringify({ url: uploadData.url, captionId, captionEn, category }),
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          lastError = errData.error ?? "Gagal menyimpan foto ke database";
+          failCount++;
+        } else {
+          successCount++;
+        }
+      } catch {
+        lastError = "Kesalahan jaringan.";
+        failCount++;
+      }
     }
+    
+    if (failCount > 0) {
+      alert(`Berhasil mengunggah ${successCount} foto. Gagal ${failCount} foto. Error: ${lastError}`);
+    }
+
     setUploading(false);
     setCaptionId(""); setCaptionEn("");
     load();
@@ -59,8 +85,17 @@ export default function AdminGallery() {
 
   const remove = async (id: string) => {
     if (!confirm("Hapus foto ini?")) return;
-    await apiFetch("/api/admin/gallery", { method: "DELETE", body: JSON.stringify({ id }) });
-    load();
+    try {
+      const res = await apiFetch("/api/admin/gallery", { method: "DELETE", body: JSON.stringify({ id }) });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        alert(`Gagal menghapus foto: ${errorData.error || res.statusText || "Terjadi kesalahan"}`);
+      } else {
+        load();
+      }
+    } catch {
+      alert("Gagal menghubungi server.");
+    }
   };
 
   const filtered = filter === "all" ? list : list.filter((g) => g.category === filter);

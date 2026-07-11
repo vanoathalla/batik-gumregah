@@ -7,19 +7,19 @@ function auth(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   if (!auth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  return NextResponse.json(getGallery());
+  return NextResponse.json(await getGallery());
 }
 
 export async function POST(req: NextRequest) {
   if (!auth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const body = await req.json();
-  const item = addGalleryItem(body);
+  const item = await addGalleryItem(body);
   return NextResponse.json(item, { status: 201 });
 }
 
 export async function DELETE(req: NextRequest) {
   if (!auth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { id } = await req.json();
-  deleteGalleryItem(id);
+  await deleteGalleryItem(id);
   return NextResponse.json({ success: true });
 }

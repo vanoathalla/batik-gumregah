@@ -7,26 +7,26 @@ function auth(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   if (!auth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  return NextResponse.json(getProducts());
+  return NextResponse.json(await getProducts());
 }
 
 export async function POST(req: NextRequest) {
   if (!auth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const body = await req.json();
-  const item = addProduct(body);
+  const item = await addProduct(body);
   return NextResponse.json(item, { status: 201 });
 }
 
 export async function PATCH(req: NextRequest) {
   if (!auth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { id, ...patch } = await req.json();
-  updateProduct(id, patch);
+  await updateProduct(id, patch);
   return NextResponse.json({ success: true });
 }
 
 export async function DELETE(req: NextRequest) {
   if (!auth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { id } = await req.json();
-  deleteProduct(id);
+  await deleteProduct(id);
   return NextResponse.json({ success: true });
 }
