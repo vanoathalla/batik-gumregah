@@ -22,6 +22,17 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const pathname = usePathname();
   const [sideOpen, setSideOpen] = useState(false);
 
+  // Close mobile sidebar when switching to desktop view
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768 && sideOpen) {
+        setSideOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [sideOpen]);
+
   useEffect(() => {
     if (!checking && !isLoggedIn) router.replace("/admin/login");
   }, [checking, isLoggedIn, router]);
@@ -54,7 +65,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   return (
     <>
       {/* Sidebar desktop */}
-      <aside style={s.sidebar} className="admin-sidebar">
+      <aside style={s.sidebar} className="admin-sidebar" role="navigation" aria-label="Admin sidebar">
         <div style={{ padding: "0 1.5rem 1.5rem", borderBottom: "1px solid rgba(184,150,96,0.12)" }}>
           <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1.1rem", fontWeight: 600, color: "#E8DDD0" }}>
             Batik Gumregah
@@ -87,7 +98,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       </aside>
 
       {/* Mobile top bar */}
-      <div className="admin-topbar" style={{ display: "none", position: "fixed", top: 0, left: 0, right: 0, height: "52px", background: "#211610", alignItems: "center", justifyContent: "space-between", padding: "0 1.25rem", zIndex: 40 }}>
+      <div className="admin-topbar" role="banner" aria-label="Admin top bar" style={{ display: "none", position: "fixed", top: 0, left: 0, right: 0, height: "52px", background: "#211610", alignItems: "center", justifyContent: "space-between", padding: "0 1.25rem", zIndex: 41 }}>
         <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1rem", fontWeight: 600, color: "#E8DDD0" }}>
           Admin
         </p>
@@ -120,13 +131,11 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         {children}
       </main>
 
-      <style>{`
-        @media(max-width:768px){
-          .admin-sidebar{display:none !important;}
-          .admin-topbar{display:flex !important;}
-          .admin-main{margin-left:0 !important; padding-top:4rem !important;}
-        }
-      `}</style>
+      <style>{`@media(max-width:768px){
+        .admin-sidebar{display:none !important;}
+        .admin-topbar{display:flex !important;}
+        .admin-main{margin-left:0 !important; padding-top:4rem !important;}
+      }`}</style>
     </>
   );
 }
