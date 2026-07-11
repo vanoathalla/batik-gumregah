@@ -55,7 +55,8 @@ export default function ProductsSection() {
 
         {/* Filter row */}
         <AnimateOnScroll>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "1rem", marginBottom: "2.5rem", borderBottom: "1px solid var(--border)", paddingBottom: "1.5rem" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "1rem", marginBottom: "2.5rem", borderBottom: "1px solid var(--border)", paddingBottom: "1.5rem" }}
+            className="product-filter-row">
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
               {allCats.map((c) => {
                 const active = c === t.products.allCategories ? cat === "All" : cat === c;
@@ -67,7 +68,7 @@ export default function ProductsSection() {
                 );
               })}
             </div>
-            <div style={{ position: "relative" }}>
+            <div style={{ position: "relative" }} className="product-search">
               <Search size={12} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--gold)", pointerEvents: "none" }} />
               <input value={q} onChange={(e) => setQ(e.target.value)}
                 placeholder={t.products.searchPlaceholder}
@@ -199,7 +200,15 @@ export default function ProductsSection() {
         );
       })()}
 
-      <style>{`@media(max-width:768px){.product-grid{grid-template-columns:1fr 1fr !important;}}`}</style>
+      <style>{`
+        @media(max-width:768px){.product-grid{grid-template-columns:1fr 1fr !important;}}
+        @media(max-width:480px){.product-grid{grid-template-columns:1fr !important;}}
+        @media(max-width:640px){
+          .product-filter-row { flex-direction: column !important; align-items: stretch !important; }
+          .product-search input { width: 100% !important; }
+          .product-search { width: 100% !important; }
+        }
+      `}</style>
     </section>
   );
 }

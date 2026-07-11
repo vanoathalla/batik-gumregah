@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { ThemeProvider } from "@/context/ThemeContext";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import WhatsAppFloat from "@/components/ui/WhatsAppFloat";
+import ConditionalLayout from "@/components/layout/ConditionalLayout";
 
 export const metadata: Metadata = {
   title: {
@@ -81,10 +79,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ThemeProvider>
           <LanguageProvider>
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
-            <WhatsAppFloat />
+            <ConditionalLayout>
+              {children}
+            </ConditionalLayout>
           </LanguageProvider>
         </ThemeProvider>
       </body>

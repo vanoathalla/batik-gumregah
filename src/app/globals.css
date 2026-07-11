@@ -39,6 +39,8 @@ body {
   font-size: 14px;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden; /* prevent horizontal scroll on iOS Safari */
+  position: relative;
 }
 
 h1, h2, h3, h4, h5 {

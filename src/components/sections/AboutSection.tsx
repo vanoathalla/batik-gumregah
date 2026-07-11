@@ -97,7 +97,10 @@ export default function AboutSection() {
       <style>{`
         @media (max-width: 768px) {
           .grid-cols-1.md\\:grid-cols-2 { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
-          .grid-timeline { grid-template-columns: 1fr 1fr !important; }
+          .grid-timeline { grid-template-columns: 1fr 1fr !important; gap: 1.25rem !important; }
+        }
+        @media (max-width: 480px) {
+          .grid-timeline { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </section>

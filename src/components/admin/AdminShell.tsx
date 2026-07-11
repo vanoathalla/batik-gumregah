@@ -97,8 +97,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         </div>
       </aside>
 
-      {/* Mobile top bar */}
-      <div className="admin-topbar" role="banner" aria-label="Admin top bar" style={{ display: "none", position: "fixed", top: 0, left: 0, right: 0, height: "52px", background: "#211610", alignItems: "center", justifyContent: "space-between", padding: "0 1.25rem", zIndex: 41 }}>
+      {/* Mobile top bar — visibility handled purely via CSS class, no inline display */}
+      <div className="admin-topbar" role="banner" aria-label="Admin top bar" style={{ position: "fixed", top: 0, left: 0, right: 0, height: "52px", background: "#211610", alignItems: "center", justifyContent: "space-between", padding: "0 1.25rem", zIndex: 41 }}>
         <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1rem", fontWeight: 600, color: "#E8DDD0" }}>
           Admin
         </p>
@@ -131,11 +131,21 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         {children}
       </main>
 
-      <style>{`@media(max-width:768px){
-        .admin-sidebar{display:none !important;}
-        .admin-topbar{display:flex !important;}
-        .admin-main{margin-left:0 !important; padding-top:4rem !important;}
-      }`}</style>
+      <style>{`
+        /* Desktop: show sidebar, hide topbar */
+        .admin-topbar { display: none; }
+        .admin-sidebar { display: flex !important; }
+
+        @media (max-width: 768px) {
+          .admin-sidebar { display: none !important; }
+          .admin-topbar  { display: flex !important; }
+          .admin-main    { margin-left: 0 !important; padding: 4.5rem 1rem 2rem !important; }
+        }
+
+        @media (max-width: 480px) {
+          .admin-main { padding: 4.5rem 0.75rem 2rem !important; }
+        }
+      `}</style>
     </>
   );
 }

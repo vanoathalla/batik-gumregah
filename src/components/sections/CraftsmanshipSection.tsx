@@ -68,7 +68,10 @@ export default function CraftsmanshipSection() {
         </AnimateOnScroll>
       </div>
 
-      <style>{`@media(max-width:768px){.craft-grid{grid-template-columns:1fr 1fr !important;}}`}</style>
+      <style>{`
+        @media(max-width:768px){.craft-grid{grid-template-columns:1fr 1fr !important;}}
+        @media(max-width:480px){.craft-grid{grid-template-columns:1fr !important;}}
+      `}</style>
     </section>
   );
 }
