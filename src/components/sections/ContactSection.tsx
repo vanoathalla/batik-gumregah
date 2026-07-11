@@ -1,145 +1,225 @@
 "use client";
 
-import { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import AnimateOnScroll from "@/components/ui/AnimateOnScroll";
-import { Send } from "lucide-react";
+import { MessageSquare, Mail, Instagram, ArrowUpRight } from "lucide-react";
 
 export default function ContactSection() {
   const { t, locale } = useLanguage();
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [sent, setSent] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setTimeout(() => { setLoading(false); setSent(true); setForm({ name: "", email: "", message: "" }); }, 1200);
+  // Data kontak (bisa diubah nanti)
+  const contactInfo = {
+    whatsappNumber: "6281234567890", // Ganti dengan nomor WhatsApp asli (format internasional tanpa + atau spasi)
+    whatsappMessage: locale === "id" 
+      ? "Halo Batik Gumregah! Saya ingin bertanya tentang koleksi batik Anda."
+      : "Hello Batik Gumregah! I would like to inquire about your batik collections.",
+    email: "hello@batikgumregah.com",
+    instagram: "batikgumregah"
   };
 
-  const channels = [
-    { label: "WhatsApp", value: "+62 812-3456-7890", href: "https://wa.me/6281234567890", sub: locale === "id" ? "Respon cepat setiap hari" : "Quick response every day" },
-    { label: "Email",    value: "hello@batikgumregah.com", href: "mailto:hello@batikgumregah.com", sub: locale === "id" ? "Balas dalam 24 jam" : "Reply within 24 hours" },
-    { label: "Instagram",value: "@batikgumregah", href: "https://instagram.com/batikgumregah", sub: locale === "id" ? "Koleksi terbaru" : "Latest collections" },
+  const whatsappUrl = `https://wa.me/${contactInfo.whatsappNumber}?text=${encodeURIComponent(contactInfo.whatsappMessage)}`;
+
+  const secondaryChannels = [
+    {
+      label: "Email",
+      value: contactInfo.email,
+      href: `mailto:${contactInfo.email}`,
+      Icon: Mail,
+      sub: locale === "id" ? "Balas dalam 24 jam" : "Reply within 24 hours"
+    },
+    {
+      label: "Instagram",
+      value: `@${contactInfo.instagram}`,
+      href: `https://instagram.com/${contactInfo.instagram}`,
+      Icon: Instagram,
+      sub: locale === "id" ? "Koleksi terbaru & update" : "Latest collections & updates"
+    }
   ];
-
-  const inputStyle: React.CSSProperties = {
-    width: "100%",
-    padding: "0.8rem 1rem",
-    borderRadius: "10px",
-    border: "1px solid var(--border)",
-    background: "transparent",
-    fontFamily: "'Poppins',sans-serif",
-    fontSize: "0.82rem",
-    color: "var(--ink)",
-    outline: "none",
-    transition: "border-color .2s",
-  };
 
   return (
     <section id="contact" style={{ background: "var(--cream-2)", padding: "6rem 0" }}>
       <div className="container-custom">
+        <div style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: "5rem" }} className="contact-grid">
+          
+          {/* Sisi Kiri: Deskripsi & Saluran Sekunder */}
+          <AnimateOnScroll direction="left" style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+            <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "10px", letterSpacing: "0.35em", textTransform: "uppercase", color: "var(--gold)" }}>
+              {t.contact.sectionLabel}
+            </span>
+            <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(1.9rem,3.5vw,3rem)", fontWeight: 500, color: "var(--brown)", marginTop: "0.5rem", marginBottom: "1.25rem" }}>
+              {t.contact.title}
+            </h2>
+            <span className="rule-gold" />
+            <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.875rem", color: "var(--muted)", marginTop: "1.25rem", maxWidth: "480px", lineHeight: 1.85, marginBottom: "2.5rem" }}>
+              {t.contact.subtitle}
+            </p>
 
-        <AnimateOnScroll className="mb-16">
-          <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "10px", letterSpacing: "0.35em", textTransform: "uppercase", color: "var(--gold)" }}>
-            {t.contact.sectionLabel}
-          </span>
-          <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(1.9rem,3.5vw,3rem)", fontWeight: 500, color: "var(--brown)", marginTop: "0.5rem", marginBottom: "1.25rem" }}>
-            {t.contact.title}
-          </h2>
-          <span className="rule-gold" />
-          <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.875rem", color: "var(--muted)", marginTop: "1.25rem", maxWidth: "520px", lineHeight: 1.85 }}>
-            {t.contact.subtitle}
-          </p>
-        </AnimateOnScroll>
-
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem" }}
-          className="contact-grid">
-
-          {/* Channels */}
-          <AnimateOnScroll direction="left">
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              {channels.map(({ label, value, href, sub }) => (
+            {/* Email & Instagram List */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem", maxWidth: "440px" }}>
+              {secondaryChannels.map(({ label, value, href, Icon, sub }) => (
                 <a
                   key={label}
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ display: "flex", flexDirection: "column", paddingTop: "1.25rem", paddingBottom: "1.25rem", borderBottom: "1px solid var(--border)", textDecoration: "none", transition: "opacity .2s" }}
-                  onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.opacity = ".7")}
-                  onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.opacity = "1")}
+                  style={{ display: "flex", alignItems: "center", gap: "1.25rem", padding: "1.25rem", borderRadius: "12px", border: "1px solid var(--border)", background: "var(--cream)", textDecoration: "none", transition: "all .3s ease" }}
+                  className="contact-card-hover"
                 >
-                  <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "10px", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "0.2rem" }}>
-                    {label}
-                  </span>
-                  <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.9rem", fontWeight: 500, color: "var(--brown)", marginBottom: "0.15rem" }}>
-                    {value}
-                  </span>
-                  <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.75rem", color: "var(--muted)" }}>
-                    {sub}
-                  </span>
+                  <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "rgba(184, 150, 96, 0.08)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--gold)", flexShrink: 0 }}>
+                    <Icon size={18} />
+                  </div>
+                  <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "0.15rem" }}>
+                    <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "9px", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--gold)", fontWeight: 600 }}>
+                      {label}
+                    </span>
+                    <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.85rem", fontWeight: 500, color: "var(--brown)" }}>
+                      {value}
+                    </span>
+                    <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.72rem", color: "var(--muted)" }}>
+                      {sub}
+                    </span>
+                  </div>
+                  <ArrowUpRight size={16} style={{ color: "var(--muted)", opacity: 0.6 }} />
                 </a>
               ))}
             </div>
           </AnimateOnScroll>
 
-          {/* Form */}
+          {/* Sisi Kanan: Kartu Utama WhatsApp (CTA Card) */}
           <AnimateOnScroll direction="right">
-            {sent ? (
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "0.75rem", paddingTop: "2rem" }}>
-                <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1.4rem", fontWeight: 600, color: "var(--brown)" }}>
-                  {locale === "id" ? "Pesan terkirim." : "Message sent."}
+            <div style={{
+              background: "var(--cream)",
+              border: "1px solid rgba(184, 150, 96, 0.18)",
+              borderRadius: "20px",
+              padding: "2.5rem",
+              boxShadow: "0 10px 30px rgba(33, 22, 16, 0.02)",
+              display: "flex",
+              flexDirection: "column",
+              height: "100%",
+              justifyContent: "space-between",
+              position: "relative",
+              overflow: "hidden"
+            }}>
+              {/* Hiasan latar belakang batik/lingkaran halus */}
+              <div style={{
+                position: "absolute",
+                top: "-50px",
+                right: "-50px",
+                width: "150px",
+                height: "150px",
+                borderRadius: "50%",
+                background: "rgba(184, 150, 96, 0.03)",
+                pointerEvents: "none"
+              }} />
+
+              <div>
+                <div style={{
+                  width: "56px",
+                  height: "56px",
+                  borderRadius: "16px",
+                  background: "rgba(37, 211, 102, 0.08)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#25D366",
+                  marginBottom: "2rem"
+                }}>
+                  <MessageSquare size={26} />
+                </div>
+
+                <h3 style={{
+                  fontFamily: "'Cormorant Garamond',serif",
+                  fontSize: "1.8rem",
+                  fontWeight: 600,
+                  color: "var(--brown)",
+                  marginBottom: "1rem"
+                }}>
+                  {locale === "id" ? "Hubungi Melalui WhatsApp" : "Connect on WhatsApp"}
+                </h3>
+
+                <p style={{
+                  fontFamily: "'Poppins',sans-serif",
+                  fontSize: "0.85rem",
+                  color: "var(--muted)",
+                  lineHeight: 1.8,
+                  marginBottom: "2rem"
+                }}>
+                  {locale === "id"
+                    ? "Hubungi admin kami langsung untuk melakukan pemesanan, menanyakan stok produk batik tulis, berkonsultasi mengenai custom motif, atau menjadwalkan kunjungan ke workshop kami di Desa Kanten, Imogiri."
+                    : "Get in touch with our admin directly for orders, checking batik tulis stock, consulting about custom motifs, or scheduling a visit to our workshop in Kanten Village, Imogiri."}
                 </p>
-                <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.82rem", color: "var(--muted)" }}>
-                  {locale === "id" ? "Kami akan segera menghubungi Anda." : "We'll get back to you soon."}
-                </p>
-                <button
-                  onClick={() => setSent(false)}
-                  style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.78rem", color: "var(--gold)", background: "none", border: "none", cursor: "pointer", textDecoration: "underline", textUnderlineOffset: "3px", marginTop: "0.5rem" }}
-                >
-                  {locale === "id" ? "Kirim pesan lain" : "Send another"}
-                </button>
+
+                <div style={{
+                  background: "rgba(184, 150, 96, 0.04)",
+                  border: "1px dashed rgba(184, 150, 96, 0.2)",
+                  borderRadius: "12px",
+                  padding: "1rem",
+                  marginBottom: "2rem"
+                }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                    <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--gold)", fontWeight: 600 }}>
+                      {locale === "id" ? "Waktu Respon Admin" : "Admin Response Time"}
+                    </span>
+                    <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.8rem", color: "var(--brown)", fontWeight: 500 }}>
+                      {locale === "id" ? "Senin – Sabtu: 08:00 – 17:00 WIB" : "Monday – Saturday: 08:00 – 17:00 WIB"}
+                    </span>
+                  </div>
+                </div>
               </div>
-            ) : (
-              <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                <input
-                  type="text" value={form.name} placeholder={t.contact.namePlaceholder} required
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  style={inputStyle}
-                  onFocus={(e) => (e.target.style.borderColor = "var(--gold)")}
-                  onBlur={(e) => (e.target.style.borderColor = "var(--border)")}
-                />
-                <input
-                  type="email" value={form.email} placeholder={t.contact.emailPlaceholder} required
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  style={inputStyle}
-                  onFocus={(e) => (e.target.style.borderColor = "var(--gold)")}
-                  onBlur={(e) => (e.target.style.borderColor = "var(--border)")}
-                />
-                <textarea
-                  value={form.message} placeholder={t.contact.messagePlaceholder} required rows={5}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  style={{ ...inputStyle, resize: "none" }}
-                  onFocus={(e) => (e.target.style.borderColor = "var(--gold)")}
-                  onBlur={(e) => (e.target.style.borderColor = "var(--border)")}
-                />
-                <button
-                  type="submit" disabled={loading}
-                  style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", padding: "0.9rem", borderRadius: "10px", background: "var(--brown)", color: "var(--cream)", fontFamily: "'Poppins',sans-serif", fontSize: "0.82rem", fontWeight: 600, border: "none", cursor: "pointer", opacity: loading ? 0.6 : 1, transition: "opacity .2s" }}
-                >
-                  {loading ? (
-                    <span className="animate-spin" style={{ width: "14px", height: "14px", borderRadius: "50%", border: "2px solid rgba(247,243,238,0.3)", borderTopColor: "var(--cream)", display: "inline-block" }} />
-                  ) : (
-                    <><Send size={13} /> {t.contact.sendButton}</>
-                  )}
-                </button>
-              </form>
-            )}
+
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "10px",
+                  padding: "1rem",
+                  borderRadius: "12px",
+                  background: "var(--brown)",
+                  color: "var(--cream)",
+                  fontFamily: "'Poppins',sans-serif",
+                  fontSize: "0.85rem",
+                  fontWeight: 600,
+                  border: "none",
+                  cursor: "pointer",
+                  textDecoration: "none",
+                  textAlign: "center",
+                  transition: "all .3s ease",
+                  boxShadow: "0 4px 12px rgba(33, 22, 16, 0.1)"
+                }}
+                className="whatsapp-btn-hover"
+              >
+                <MessageSquare size={16} />
+                {locale === "id" ? "Hubungi via WhatsApp" : "Chat on WhatsApp"}
+              </a>
+            </div>
           </AnimateOnScroll>
+
         </div>
       </div>
 
-      <style>{`@media(max-width:768px){.contact-grid{grid-template-columns:1fr !important;gap:2.5rem !important;}}`}</style>
+      <style>{`
+        .contact-card-hover:hover {
+          border-color: var(--gold) !important;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(184, 150, 96, 0.06);
+        }
+        .whatsapp-btn-hover:hover {
+          background: var(--gold) !important;
+          color: #1e1208 !important;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 18px rgba(184, 150, 96, 0.25);
+        }
+        @media(max-width:768px){
+          .contact-grid {
+            grid-template-columns: 1fr !important;
+            gap: 3rem !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }
