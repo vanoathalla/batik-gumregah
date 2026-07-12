@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import { localeFlags, localeNames } from "@/lib/i18n";
@@ -65,14 +66,24 @@ export default function Navbar() {
           {/* Logo */}
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            style={{ background: "none", border: "none", cursor: "pointer", textAlign: "left", padding: 0 }}
+            style={{ background: "none", border: "none", cursor: "pointer", textAlign: "left", padding: 0, display: "flex", alignItems: "center", gap: "0.6rem" }}
           >
-            <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1.2rem", fontWeight: 600, color: scrolled ? "var(--brown)" : "#F0E8DC", lineHeight: 1.1, letterSpacing: "-0.01em" }}>
-              Batik Gumregah
-            </p>
-            <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "8px", letterSpacing: "0.3em", textTransform: "uppercase", color: scrolled ? "var(--gold)" : "rgba(184,150,96,0.8)", marginTop: "1px" }}>
-              Kanten · Imogiri
-            </p>
+            <Image
+              src="/images/logo.png"
+              alt="Logo Batik Gumregah"
+              width={40}
+              height={40}
+              style={{ objectFit: "contain", flexShrink: 0 }}
+              priority
+            />
+            <div>
+              <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1.2rem", fontWeight: 600, color: scrolled ? "var(--brown)" : "#F0E8DC", lineHeight: 1.1, letterSpacing: "-0.01em" }}>
+                Batik Gumregah
+              </p>
+              <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "8px", letterSpacing: "0.3em", textTransform: "uppercase", color: scrolled ? "var(--gold)" : "rgba(184,150,96,0.8)", marginTop: "1px" }}>
+                Kanten · Imogiri
+              </p>
+            </div>
           </button>
 
           {/* Desktop links */}

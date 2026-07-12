@@ -27,6 +27,52 @@ export default function PhilosophySection() {
           </p>
         </AnimateOnScroll>
 
+        {/* Kutipan Filosofi Nama "Gumregah" */}
+        <AnimateOnScroll direction="up">
+          <div style={{
+            position: "relative",
+            background: "var(--cream)",
+            border: "1px solid var(--border)",
+            borderLeft: "4px solid var(--gold)",
+            borderRadius: "0 16px 16px 0",
+            padding: "2.5rem 2.5rem 2.5rem 3rem",
+            maxWidth: "860px",
+            marginBottom: "4.5rem",
+            boxShadow: "0 4px 32px rgba(61,43,31,0.06)"
+          }}>
+            {/* Tanda kutip dekoratif */}
+            <span style={{
+              position: "absolute", top: "1.25rem", left: "1.5rem",
+              fontFamily: "'Cormorant Garamond',serif", fontSize: "5rem",
+              color: "var(--gold)", opacity: 0.18, lineHeight: 1,
+              userSelect: "none", pointerEvents: "none"
+            }}>
+              &ldquo;
+            </span>
+            <p style={{
+              fontFamily: "'Cormorant Garamond',serif",
+              fontSize: "clamp(1.1rem,2vw,1.4rem)",
+              fontStyle: "italic",
+              fontWeight: 500,
+              color: "var(--brown)",
+              lineHeight: 1.75,
+              marginBottom: "1.25rem"
+            }}>
+              {locale === "id"
+                ? <>Nama dari <em>Gumregah</em> memiliki arti kata <strong>Semangat dan Bangkit</strong>, nama ini dipilih oleh sang owner sebagai pemacu semangat dan terus berinovasi untuk menghasilkan karya&#8209;karya batik.</>
+                : <>The name <em>Gumregah</em> means <strong>Spirit and Rise</strong>, chosen by the owner as a constant reminder to stay passionate and keep innovating in producing batik works.</>
+              }
+            </p>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+              <span style={{ display: "inline-block", width: "32px", height: "1px", background: "var(--gold)", opacity: 0.6 }} />
+              <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.72rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--gold)" }}>
+                Batik Gumregah
+              </span>
+            </div>
+          </div>
+        </AnimateOnScroll>
+
+
         {/* Grid */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "1.5rem" }}
           className="motif-grid">

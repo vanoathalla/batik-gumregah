@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+ import type { Metadata } from "next";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -44,7 +44,13 @@ export async function generateMetadata(): Promise<Metadata> {
       images: ["/images/og-image.jpg"],
     },
     robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
-    icons: { icon: "/favicon.ico", apple: "/apple-touch-icon.png" },
+    icons: {
+      icon: [
+        { url: "/images/logo.png", type: "image/png" },
+        { url: "/favicon.ico" }
+      ],
+      apple: "/images/logo.png"
+    },
     manifest: "/site.webmanifest",
     verification: {
       google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
@@ -69,8 +75,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
               name: "Batik Gumregah",
-              description: "Traditional handcrafted batik studio from Kanten Village, Imogiri, Yogyakarta",
+              alternateName: "Batik Gumregah - Semangat dan Bangkit",
+              description: "Batik Gumregah adalah studio batik tulis dari Desa Kanten, Imogiri, Yogyakarta. Nama \"Gumregah\" bermakna Semangat dan Bangkit — dipilih sebagai pemacu semangat untuk terus berinovasi menghasilkan karya batik berkualitas tinggi.",
               url: baseUrl,
+              logo: `${baseUrl}/images/logo.png`,
+              image: [`${baseUrl}/images/logo.png`, `${baseUrl}/images/og-image.jpg`],
               telephone: "+62-274-000000",
               address: {
                 "@type": "PostalAddress",
@@ -82,9 +91,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               },
               geo: { "@type": "GeoCoordinates", latitude: -7.9469, longitude: 110.4123 },
               openingHours: "Mo-Sa 08:00-17:00",
-              image: `${baseUrl}/images/og-image.jpg`,
               priceRange: "Rp125.000 - Rp2.500.000",
-              servesCuisine: "Batik",
+              sameAs: [
+                "https://instagram.com/batikgumregah"
+              ],
             }),
           }}
         />
