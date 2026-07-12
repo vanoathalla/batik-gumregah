@@ -27,18 +27,18 @@ export default function Footer() {
   ];
 
   return (
-    <footer style={{ background: "#211610", color: "#9A8070", fontFamily: "'Poppins',sans-serif" }}>
+    <footer style={{ background: "#211610", color: "#9A8070", fontFamily: "'Poppins',sans-serif", overflowX: "hidden" }}>
 
-      {/* Newsletter strip */}
-      <div style={{ borderBottom: "1px solid rgba(184,150,96,0.12)", padding: "4rem 0" }}>
-        <div className="container-custom" style={{ maxWidth: "560px", margin: "0 auto", textAlign: "center" }}>
-          <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "10px", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "1rem" }}>
+      {/* ── Newsletter ── */}
+      <div style={{ borderBottom: "1px solid rgba(184,150,96,0.12)", padding: "3.5rem 0" }}>
+        <div style={{ maxWidth: "500px", margin: "0 auto", textAlign: "center", padding: "0 1.5rem" }}>
+          <p style={{ fontSize: "9px", letterSpacing: "0.35em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "0.75rem" }}>
             Newsletter
           </p>
-          <h3 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1.6rem", fontWeight: 500, color: "#E8DDD0", marginBottom: "0.5rem" }}>
+          <h3 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1.5rem", fontWeight: 500, color: "#E8DDD0", marginBottom: "0.5rem", lineHeight: 1.2 }}>
             {t.newsletter.title}
           </h3>
-          <p style={{ fontSize: "0.82rem", color: "#7A6A5A", marginBottom: "1.75rem", lineHeight: 1.75 }}>
+          <p style={{ fontSize: "0.8rem", color: "#7A6A5A", marginBottom: "1.5rem", lineHeight: 1.75 }}>
             {t.newsletter.subtitle}
           </p>
           {subscribed ? (
@@ -46,16 +46,16 @@ export default function Footer() {
               <Check size={14} /> {t.newsletter.button}
             </div>
           ) : (
-            <form onSubmit={handleSubscribe} className="newsletter-form" style={{ display: "flex", gap: "0.5rem", maxWidth: "400px", margin: "0 auto" }}>
+            <form onSubmit={handleSubscribe} style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
               <input
                 type="email" value={email} required
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t.newsletter.placeholder}
-                style={{ flex: 1, minWidth: 0, padding: "0.75rem 1rem", borderRadius: "100px", border: "1px solid rgba(184,150,96,0.2)", background: "rgba(255,255,255,0.04)", color: "#E8DDD0", fontFamily: "'Poppins',sans-serif", fontSize: "0.78rem", outline: "none" }}
+                style={{ width: "100%", padding: "0.8rem 1.2rem", borderRadius: "100px", border: "1px solid rgba(184,150,96,0.25)", background: "rgba(255,255,255,0.04)", color: "#E8DDD0", fontFamily: "'Poppins',sans-serif", fontSize: "0.8rem", outline: "none", boxSizing: "border-box" }}
               />
               <button
                 type="submit"
-                style={{ flexShrink: 0, padding: "0.75rem 1.25rem", borderRadius: "100px", background: "var(--gold)", color: "#1E1208", fontFamily: "'Poppins',sans-serif", fontSize: "0.78rem", fontWeight: 600, border: "none", cursor: "pointer", whiteSpace: "nowrap" }}
+                style={{ width: "100%", padding: "0.8rem 1.2rem", borderRadius: "100px", background: "var(--gold)", color: "#1E1208", fontFamily: "'Poppins',sans-serif", fontSize: "0.8rem", fontWeight: 600, border: "none", cursor: "pointer" }}
               >
                 {t.newsletter.button}
               </button>
@@ -64,38 +64,38 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Main grid — desktop: 2fr 1fr 1fr | mobile: brand full + 2-col links */}
-      <div className="container-custom" style={{ padding: "4rem 0 3rem" }}>
+      {/* ── Main content ── */}
+      <div style={{ padding: "3.5rem 1.5rem 2.5rem", maxWidth: "1200px", margin: "0 auto", boxSizing: "border-box" }}>
 
-        {/* Brand row — always full width on mobile, spans all desktop cols */}
-        <div className="footer-brand-row">
-          <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1.25rem", fontWeight: 600, color: "#E8DDD0", marginBottom: "0.25rem" }}>
+        {/* Brand */}
+        <div style={{ marginBottom: "2.5rem", paddingBottom: "2rem", borderBottom: "1px solid rgba(184,150,96,0.10)" }}>
+          <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "1.3rem", fontWeight: 600, color: "#E8DDD0", marginBottom: "0.2rem" }}>
             Batik Gumregah
           </p>
-          <p style={{ fontSize: "9px", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "1rem" }}>
+          <p style={{ fontSize: "8px", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "0.9rem" }}>
             Kanten · Imogiri · Yogyakarta
           </p>
-          <p style={{ fontSize: "0.8rem", lineHeight: 1.8, color: "#7A6A5A", maxWidth: "280px" }}>
+          <p style={{ fontSize: "0.8rem", lineHeight: 1.8, color: "#7A6A5A", maxWidth: "320px" }}>
             {t.footer.tagline}
           </p>
         </div>
 
-        {/* Links + Contact row */}
-        <div className="footer-links-contact">
+        {/* Quick links + Contact — 2 col always */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem" }}>
 
           {/* Quick links */}
           <div>
-            <p style={{ fontSize: "10px", letterSpacing: "0.25em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "1.25rem" }}>
+            <p style={{ fontSize: "9px", letterSpacing: "0.25em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "1rem" }}>
               {t.footer.quickLinks}
             </p>
-            <ul style={{ display: "flex", flexDirection: "column", gap: "0.6rem", listStyle: "none" }}>
+            <ul style={{ display: "flex", flexDirection: "column", gap: "0.55rem", listStyle: "none" }}>
               {navLinks.map((link) => (
                 <li key={link.href}>
                   <button
                     onClick={() => scrollTo(link.href)}
-                    style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "'Poppins',sans-serif", fontSize: "0.8rem", color: "#7A6A5A", padding: 0, transition: "color .2s" }}
-                    onMouseEnter={(e) => ((e.target as HTMLButtonElement).style.color = "#B89660")}
-                    onMouseLeave={(e) => ((e.target as HTMLButtonElement).style.color = "#7A6A5A")}
+                    style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "'Poppins',sans-serif", fontSize: "0.8rem", color: "#7A6A5A", padding: 0, transition: "color .2s", textAlign: "left" }}
+                    onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "#B89660")}
+                    onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "#7A6A5A")}
                   >
                     {link.label}
                   </button>
@@ -106,7 +106,7 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <p style={{ fontSize: "10px", letterSpacing: "0.25em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "1.25rem" }}>
+            <p style={{ fontSize: "9px", letterSpacing: "0.25em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "1rem" }}>
               Contact
             </p>
             <ul style={{ display: "flex", flexDirection: "column", gap: "0.75rem", listStyle: "none" }}>
@@ -115,9 +115,9 @@ export default function Footer() {
                 { Icon: Phone,  text: "+62 812-3456-7890" },
                 { Icon: Mail,   text: "hello@batikgumregah.com" },
               ].map(({ Icon, text }) => (
-                <li key={text} style={{ display: "flex", gap: "0.6rem", alignItems: "start" }}>
-                  <Icon size={12} style={{ color: "var(--gold)", marginTop: "3px", flexShrink: 0 }} />
-                  <span style={{ fontSize: "0.78rem", color: "#7A6A5A", lineHeight: 1.6 }}>{text}</span>
+                <li key={text} style={{ display: "flex", gap: "0.5rem", alignItems: "start" }}>
+                  <Icon size={11} style={{ color: "var(--gold)", marginTop: "3px", flexShrink: 0 }} />
+                  <span style={{ fontSize: "0.75rem", color: "#7A6A5A", lineHeight: 1.6, wordBreak: "break-word", minWidth: 0 }}>{text}</span>
                 </li>
               ))}
             </ul>
@@ -126,66 +126,18 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom */}
-      <div style={{ borderTop: "1px solid rgba(184,150,96,0.10)", padding: "1.25rem 0" }}>
-        <div className="container-custom footer-bottom" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.4rem" }}>
-          <p style={{ fontSize: "0.72rem", color: "#4A3A2A" }}>
+      {/* ── Bottom bar ── */}
+      <div style={{ borderTop: "1px solid rgba(184,150,96,0.08)", padding: "1rem 1.5rem", boxSizing: "border-box" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.4rem" }}>
+          <p style={{ fontSize: "0.68rem", color: "#4A3A2A", letterSpacing: "0.01em" }}>
             © 2026 Batik Gumregah · KKN UPNVY 84.038
           </p>
-          <p style={{ fontSize: "0.72rem", color: "#4A3A2A" }}>
+          <p style={{ fontSize: "0.68rem", color: "#4A3A2A", letterSpacing: "0.01em" }}>
             Dibuat oleh R. Revano Athalla Kartika
           </p>
         </div>
       </div>
 
-      <style>{`
-        /* ── Desktop: brand + 2 cols in one grid row ── */
-        .footer-brand-row {
-          grid-column: 1;
-        }
-        .footer-links-contact {
-          display: flex;
-          gap: 3rem;
-          justify-content: flex-end;
-        }
-        .container-custom > .footer-brand-row,
-        .container-custom > .footer-links-contact {
-          display: block;
-        }
-
-        /* Use CSS grid on the container-custom inner */
-        .container-custom:has(.footer-brand-row) {
-          display: grid;
-          grid-template-columns: 2fr 1.8fr;
-          gap: 3rem;
-          align-items: start;
-        }
-
-        /* ── Mobile ── */
-        @media (max-width: 768px) {
-          .newsletter-form {
-            flex-direction: column !important;
-            align-items: stretch !important;
-            width: 100% !important;
-            max-width: 100% !important;
-          }
-          .newsletter-form input { width: 100% !important; }
-          .newsletter-form button { width: 100% !important; }
-
-          .container-custom:has(.footer-brand-row) {
-            grid-template-columns: 1fr !important;
-            gap: 0 !important;
-          }
-          .footer-brand-row {
-            padding-bottom: 2rem;
-            border-bottom: 1px solid rgba(184,150,96,0.10);
-            margin-bottom: 2rem;
-          }
-          .footer-links-contact {
-            gap: 1.5rem !important;
-          }
-        }
-      `}</style>
     </footer>
   );
 }
