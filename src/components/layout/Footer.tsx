@@ -132,11 +132,22 @@ export default function Footer() {
 
       {/* Bottom */}
       <div style={{ borderTop: "1px solid rgba(184,150,96,0.10)", padding: "1.25rem 0" }}>
-        <div className="container-custom" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem" }}>
-          <p style={{ fontSize: "0.72rem", color: "#4A3A2A" }}>{t.footer.copyright}</p>
-          <p style={{ fontSize: "0.72rem", color: "#4A3A2A" }}>{t.footer.madeWith}</p>
+        <div className="container-custom footer-bottom" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem" }}>
+          <p style={{ fontSize: "0.72rem", color: "#4A3A2A" }}>
+            © 2026 Batik Gumregah · KKN UPNVY 84.038
+          </p>
+          <p style={{ fontSize: "0.72rem", color: "#4A3A2A" }}>
+            Dibuat oleh R. Revano Athalla Kartika
+          </p>
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .footer-grid { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
+          .footer-bottom { flex-direction: column !important; align-items: center !important; text-align: center !important; gap: 0.25rem !important; }
+        }
+      `}</style>
     </footer>
   );
 }
