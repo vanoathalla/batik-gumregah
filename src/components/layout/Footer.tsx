@@ -52,16 +52,16 @@ export default function Footer() {
               <Check size={14} /> {t.newsletter.button}
             </div>
           ) : (
-            <form onSubmit={handleSubscribe} style={{ display: "flex", gap: "0.5rem", maxWidth: "400px", margin: "0 auto" }}>
+            <form onSubmit={handleSubscribe} className="newsletter-form" style={{ display: "flex", gap: "0.5rem", maxWidth: "400px", margin: "0 auto" }}>
               <input
                 type="email" value={email} required
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t.newsletter.placeholder}
-                style={{ flex: 1, padding: "0.75rem 1rem", borderRadius: "100px", border: "1px solid rgba(184,150,96,0.2)", background: "rgba(255,255,255,0.04)", color: "#E8DDD0", fontFamily: "'Poppins',sans-serif", fontSize: "0.78rem", outline: "none" }}
+                style={{ flex: 1, minWidth: 0, padding: "0.75rem 1rem", borderRadius: "100px", border: "1px solid rgba(184,150,96,0.2)", background: "rgba(255,255,255,0.04)", color: "#E8DDD0", fontFamily: "'Poppins',sans-serif", fontSize: "0.78rem", outline: "none" }}
               />
               <button
                 type="submit"
-                style={{ padding: "0.75rem 1.25rem", borderRadius: "100px", background: "var(--gold)", color: "#1E1208", fontFamily: "'Poppins',sans-serif", fontSize: "0.78rem", fontWeight: 600, border: "none", cursor: "pointer", whiteSpace: "nowrap" }}
+                style={{ flexShrink: 0, padding: "0.75rem 1.25rem", borderRadius: "100px", background: "var(--gold)", color: "#1E1208", fontFamily: "'Poppins',sans-serif", fontSize: "0.78rem", fontWeight: 600, border: "none", cursor: "pointer", whiteSpace: "nowrap" }}
               >
                 {t.newsletter.button}
               </button>
@@ -146,6 +146,9 @@ export default function Footer() {
         @media (max-width: 768px) {
           .footer-grid { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
           .footer-bottom { flex-direction: column !important; align-items: center !important; text-align: center !important; gap: 0.25rem !important; }
+          .newsletter-form { flex-direction: column !important; align-items: stretch !important; width: 100% !important; max-width: 100% !important; }
+          .newsletter-form input { width: 100% !important; }
+          .newsletter-form button { width: 100% !important; }
         }
       `}</style>
     </footer>
