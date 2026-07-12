@@ -158,10 +158,10 @@ export default function Navbar() {
         )}
       </nav>
 
-      <style>{`
-        @media(max-width:900px){ .desktop-nav{display:none !important;} .hamburger{display:flex !important;} }
-        @media(max-width:480px){ .lang-text{display:none;} }
-      `}</style>
+<style>{`
+  @media (max-width:1024px) { .desktop-nav{display:none !important;} .hamburger{display:flex !important;} }
+  @media (max-width:768px) { .lang-text{display:none;} }
+`}</style>
     </>
   );
 }
