@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
@@ -14,6 +14,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("");
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -21,14 +23,39 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Track active section via IntersectionObserver
+  useEffect(() => {
+    const sectionIds = ["about", "philosophy", "craftsmanship", "collections", "visit", "contact"];
+
+    observerRef.current?.disconnect();
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        // Pick the most-visible intersecting section
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible.length > 0) {
+          setActiveSection(visible[0].target.id);
+        }
+      },
+      { threshold: [0.2, 0.4], rootMargin: "-64px 0px -30% 0px" }
+    );
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observerRef.current?.observe(el);
+    });
+
+    return () => observerRef.current?.disconnect();
+  }, []);
+
   const navLinks = [
-    { href: "#about",        label: t.nav.ourStory      },
-    { href: "#philosophy",   label: t.nav.philosophy    },
-    { href: "#craftsmanship",label: t.nav.craftsmanship },
-    { href: "#collections",  label: t.nav.collections   },
-    { href: "#journal",      label: t.nav.journal       },
-    { href: "#visit",        label: t.nav.visitUs       },
-    { href: "#contact",      label: t.nav.contact       },
+    { href: "#about",         label: t.nav.ourStory      },
+    { href: "#philosophy",    label: t.nav.philosophy    },
+    { href: "#craftsmanship", label: t.nav.craftsmanship },
+    { href: "#collections",   label: t.nav.collections   },
+    { href: "#visit",         label: t.nav.visitUs       },
+    { href: "#contact",       label: t.nav.contact       },
   ];
 
   const scrollTo = (href: string) => {
@@ -46,16 +73,21 @@ export default function Navbar() {
     borderBottom: scrolled ? "1px solid var(--border)" : "1px solid transparent",
   };
 
-  const linkStyle: React.CSSProperties = {
-    fontFamily: "'Poppins',sans-serif",
-    fontSize: "0.78rem",
-    letterSpacing: "0.02em",
-    color: scrolled ? "var(--muted)" : "rgba(240,232,220,0.75)",
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    transition: "color .2s",
-    padding: 0,
+  const getLinkStyle = (href: string): React.CSSProperties => {
+    const id = href.replace("#", "");
+    const isActive = activeSection === id;
+    return {
+      position: "relative",
+      fontFamily: "'Poppins',sans-serif",
+      fontSize: "0.78rem",
+      letterSpacing: "0.02em",
+      color: isActive ? "var(--gold)" : scrolled ? "var(--muted)" : "rgba(240,232,220,0.75)",
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      transition: "color .2s",
+      padding: "4px 0",
+    };
   };
 
   return (
@@ -65,7 +97,7 @@ export default function Navbar() {
 
           {/* Logo */}
           <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={() => { window.scrollTo({ top: 0, behavior: "smooth" }); setActiveSection(""); }}
             style={{ background: "none", border: "none", cursor: "pointer", textAlign: "left", padding: 0, display: "flex", alignItems: "center", gap: "0.6rem" }}
           >
             <Image
@@ -88,17 +120,31 @@ export default function Navbar() {
 
           {/* Desktop links */}
           <div style={{ display: "flex", alignItems: "center", gap: "2rem" }} className="desktop-nav">
-            {navLinks.map((link) => (
-              <button
-                key={link.href}
-                onClick={() => scrollTo(link.href)}
-                style={linkStyle}
-                onMouseEnter={(e) => ((e.target as HTMLButtonElement).style.color = "var(--gold)")}
-                onMouseLeave={(e) => ((e.target as HTMLButtonElement).style.color = linkStyle.color as string)}
-              >
-                {link.label}
-              </button>
-            ))}
+            {navLinks.map((link) => {
+              const id = link.href.replace("#", "");
+              const isActive = activeSection === id;
+              return (
+                <button
+                  key={link.href}
+                  onClick={() => scrollTo(link.href)}
+                  style={getLinkStyle(link.href)}
+                  onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "var(--gold)")}
+                  onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.color = getLinkStyle(link.href).color as string)}
+                >
+                  {link.label}
+                  {/* Active underline */}
+                  <span style={{
+                    position: "absolute",
+                    bottom: 0, left: 0, right: 0,
+                    height: "1px",
+                    background: "var(--gold)",
+                    transform: isActive ? "scaleX(1)" : "scaleX(0)",
+                    transformOrigin: "left",
+                    transition: "transform .3s ease",
+                  }} />
+                </button>
+              );
+            })}
           </div>
 
           {/* Controls */}
@@ -155,24 +201,45 @@ export default function Navbar() {
         {menuOpen && (
           <div style={{ background: "var(--cream)", borderTop: "1px solid var(--border)", animation: "fadeUp .25s ease-out both" }}>
             <div className="container-custom" style={{ paddingTop: "1rem", paddingBottom: "1.5rem", display: "flex", flexDirection: "column", gap: "0" }}>
-              {navLinks.map((link) => (
-                <button
-                  key={link.href}
-                  onClick={() => scrollTo(link.href)}
-                  style={{ textAlign: "left", padding: "0.85rem 0", background: "none", border: "none", borderBottom: "1px solid var(--border)", cursor: "pointer", fontFamily: "'Poppins',sans-serif", fontSize: "0.85rem", color: "var(--muted)" }}
-                >
-                  {link.label}
-                </button>
-              ))}
+              {navLinks.map((link) => {
+                const id = link.href.replace("#", "");
+                const isActive = activeSection === id;
+                return (
+                  <button
+                    key={link.href}
+                    onClick={() => scrollTo(link.href)}
+                    style={{
+                      textAlign: "left",
+                      padding: "0.85rem 0",
+                      background: "none",
+                      border: "none",
+                      borderBottom: "1px solid var(--border)",
+                      cursor: "pointer",
+                      fontFamily: "'Poppins',sans-serif",
+                      fontSize: "0.85rem",
+                      color: isActive ? "var(--gold)" : "var(--muted)",
+                      fontWeight: isActive ? 600 : 400,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    {isActive && (
+                      <span style={{ width: "3px", height: "14px", background: "var(--gold)", borderRadius: "2px", flexShrink: 0 }} />
+                    )}
+                    {link.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}
       </nav>
 
-<style>{`
-  @media (max-width:1024px) { .desktop-nav{display:none !important;} .hamburger{display:flex !important;} }
-  @media (max-width:768px) { .lang-text{display:none;} }
-`}</style>
+      <style>{`
+        @media (max-width:1024px) { .desktop-nav{display:none !important;} .hamburger{display:flex !important;} }
+        @media (max-width:768px) { .lang-text{display:none;} }
+      `}</style>
     </>
   );
 }

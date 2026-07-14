@@ -5,7 +5,6 @@ import CraftsmanshipSection from "@/components/sections/CraftsmanshipSection";
 import ArtisansSection from "@/components/sections/ArtisansSection";
 import ProductsSection from "@/components/sections/ProductsSection";
 import CustomSection from "@/components/sections/CustomSection";
-import JournalSection from "@/components/sections/JournalSection";
 import GallerySection from "@/components/sections/GallerySection";
 import TestimonialsSection from "@/components/sections/TestimonialsSection";
 import VisitSection from "@/components/sections/VisitSection";
@@ -22,7 +21,6 @@ export default function Home() {
       <ArtisansSection />
       <ProductsSection />
       <CustomSection />
-      <JournalSection />
       <GallerySection />
       <TestimonialsSection />
       <VisitSection />
