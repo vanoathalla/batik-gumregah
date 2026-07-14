@@ -10,8 +10,8 @@ export default function VisitSection() {
   const info = [
     { Icon: MapPin,  label: t.visit.addressLabel, value: t.visit.address   },
     { Icon: Clock,   label: t.visit.hoursLabel,   value: t.visit.hours     },
-    { Icon: Phone,   label: t.visit.phoneLabel,   value: "+62 812-3456-7890" },
-    { Icon: Share2,  label: "Instagram",          value: "@batikgumregah"  },
+    { Icon: Phone,   label: t.visit.phoneLabel,   value: "+62 882-2951-4350" },
+    { Icon: Share2,  label: "Instagram",          value: "@batik_gumregah"  },
   ];
 
   return (

@@ -14,7 +14,7 @@ export default function CustomBatikSection() {
     { icon: Truck, id: "Pengiriman", en: "Delivery", id_desc: "Batik Anda dikemas cantik dan dikirim ke seluruh dunia.", en_desc: "Your batik is beautifully packaged and shipped worldwide." },
   ];
 
-  const waNumber = "6281234567890";
+  const waNumber = "6288229514350";
   const waMessage = encodeURIComponent("Halo! Saya ingin konsultasi pesanan batik custom. Bisa bantu?");
 
   return (

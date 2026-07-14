@@ -7,7 +7,7 @@ import { categories } from "@/lib/data";
 import { Search, X, MessageCircle } from "lucide-react";
 import type { Product } from "@/lib/store";
 
-const WA = "6281234567890";
+const WA = "6288229514350";
 const fmt = (n: number) =>
   new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(n);
 

@@ -28,12 +28,12 @@ export default function ContactSection() {
 
   // Data kontak (bisa diubah nanti)
   const contactInfo = {
-    whatsappNumber: "6281234567890", // Ganti dengan nomor WhatsApp asli (format internasional tanpa + atau spasi)
+    whatsappNumber: "6288229514350",
     whatsappMessage: locale === "id" 
       ? "Halo Batik Gumregah! Saya ingin bertanya tentang koleksi batik Anda."
       : "Hello Batik Gumregah! I would like to inquire about your batik collections.",
     email: "hello@batikgumregah.com",
-    instagram: "batikgumregah"
+    instagram: "batik_gumregah"
   };
 
   const whatsappUrl = `https://wa.me/${contactInfo.whatsappNumber}?text=${encodeURIComponent(contactInfo.whatsappMessage)}`;

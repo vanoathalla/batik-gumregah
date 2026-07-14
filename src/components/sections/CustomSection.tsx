@@ -51,7 +51,7 @@ export default function CustomSection() {
             </ul>
 
             <a
-              href={`https://wa.me/6281234567890?text=${waMsg}`}
+              href={`https://wa.me/6288229514350?text=${waMsg}`}
               target="_blank"
               rel="noopener noreferrer"
               style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "0.85rem 1.75rem", borderRadius: "100px", background: "var(--brown)", color: "var(--cream)", fontFamily: "'Poppins',sans-serif", fontSize: "0.8rem", fontWeight: 600, textDecoration: "none", transition: "opacity .2s" }}

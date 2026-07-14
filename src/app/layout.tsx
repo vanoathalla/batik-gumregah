@@ -93,7 +93,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               openingHours: "Mo-Sa 08:00-17:00",
               priceRange: "Rp125.000 - Rp2.500.000",
               sameAs: [
-                "https://instagram.com/batikgumregah"
+                "https://instagram.com/batik_gumregah"
               ],
             }),
           }}

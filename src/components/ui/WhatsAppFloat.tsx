@@ -4,7 +4,7 @@ import { useLanguage } from "@/context/LanguageContext";
 
 export default function WhatsAppFloat() {
   const { t } = useLanguage();
-  const href = `https://wa.me/6281234567890?text=${encodeURIComponent(t.whatsapp.message)}`;
+  const href = `https://wa.me/6288229514350?text=${encodeURIComponent(t.whatsapp.message)}`;
 
   return (
     <a

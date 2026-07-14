@@ -63,7 +63,7 @@ export default function FAQSection() {
               {locale === "id" ? "Masih ada pertanyaan?" : "Still have questions?"}
             </p>
             <a
-              href="https://wa.me/6281234567890"
+              href="https://wa.me/6288229514350"
               target="_blank"
               rel="noopener noreferrer"
               style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "0.75rem 1.5rem", borderRadius: "100px", background: "#25D366", color: "#fff", fontFamily: "'Poppins',sans-serif", fontSize: "0.8rem", fontWeight: 600, textDecoration: "none" }}

@@ -14,7 +14,6 @@ export default function Footer() {
     { href: "#philosophy",    label: t.nav.philosophy    },
     { href: "#craftsmanship", label: t.nav.craftsmanship },
     { href: "#collections",   label: t.nav.collections   },
-    { href: "#journal",       label: t.nav.journal       },
     { href: "#visit",         label: t.nav.visitUs       },
   ];
 
@@ -72,7 +71,7 @@ export default function Footer() {
             <ul style={{ display: "flex", flexDirection: "column", gap: "0.75rem", listStyle: "none" }}>
               {[
                 { Icon: MapPin, text: "Desa Kanten, Imogiri, Bantul, DIY" },
-                { Icon: Phone,  text: "+62 812-3456-7890" },
+                { Icon: Phone,  text: "+62 882-2951-4350" },
                 { Icon: Mail,   text: "hello@batikgumregah.com" },
               ].map(({ Icon, text }) => (
                 <li key={text} style={{ display: "flex", gap: "0.5rem", alignItems: "start" }}>
