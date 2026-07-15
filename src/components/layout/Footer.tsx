@@ -34,7 +34,7 @@ export default function Footer() {
           <p style={{ fontSize: "8px", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "0.9rem" }}>
             Kanten · Imogiri · Yogyakarta
           </p>
-          <p style={{ fontSize: "0.8rem", lineHeight: 1.8, color: "#7A6A5A", maxWidth: "320px" }}>
+          <p style={{ fontSize: "0.8rem", lineHeight: 1.8, color: "#A89888", maxWidth: "320px" }}>
             {t.footer.tagline}
           </p>
         </div>
@@ -52,9 +52,9 @@ export default function Footer() {
                 <li key={link.href}>
                   <button
                     onClick={() => scrollTo(link.href)}
-                    style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "'Poppins',sans-serif", fontSize: "0.8rem", color: "#7A6A5A", padding: 0, transition: "color .2s", textAlign: "left" }}
+                    style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "'Poppins',sans-serif", fontSize: "0.8rem", color: "#A89888", padding: 0, transition: "color .2s", textAlign: "left" }}
                     onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "#B89660")}
-                    onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "#7A6A5A")}
+                    onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "#A89888")}
                   >
                     {link.label}
                   </button>
@@ -76,7 +76,7 @@ export default function Footer() {
               ].map(({ Icon, text }) => (
                 <li key={text} style={{ display: "flex", gap: "0.5rem", alignItems: "start" }}>
                   <Icon size={11} style={{ color: "var(--gold)", marginTop: "3px", flexShrink: 0 }} />
-                  <span style={{ fontSize: "0.75rem", color: "#7A6A5A", lineHeight: 1.6, wordBreak: "break-word", minWidth: 0 }}>{text}</span>
+                  <span style={{ fontSize: "0.75rem", color: "#A89888", lineHeight: 1.6, wordBreak: "break-word", minWidth: 0 }}>{text}</span>
                 </li>
               ))}
             </ul>
@@ -88,10 +88,10 @@ export default function Footer() {
       {/* ── Bottom bar ── */}
       <div style={{ borderTop: "1px solid rgba(184,150,96,0.08)", padding: "1rem 1.5rem", boxSizing: "border-box" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.4rem" }}>
-          <p style={{ fontSize: "0.68rem", color: "#4A3A2A", letterSpacing: "0.01em" }}>
+          <p style={{ fontSize: "0.68rem", color: "#6B5A4A", letterSpacing: "0.01em" }}>
             © 2026 Batik Gumregah · KKN UPNVY 84.038
           </p>
-          <p style={{ fontSize: "0.68rem", color: "#4A3A2A", letterSpacing: "0.01em" }}>
+          <p style={{ fontSize: "0.68rem", color: "#6B5A4A", letterSpacing: "0.01em" }}>
             Dibuat oleh R. Revano Athalla Kartika
           </p>
         </div>
