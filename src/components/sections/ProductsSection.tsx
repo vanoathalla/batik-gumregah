@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import AnimateOnScroll from "@/components/ui/AnimateOnScroll";
+import SectionHeading from "@/components/ui/SectionHeading";
 import { categories } from "@/lib/data";
 import { Search, X, MessageCircle } from "lucide-react";
 import type { Product } from "@/lib/store";
@@ -40,17 +41,13 @@ export default function ProductsSection() {
     <section id="collections" style={{ background: "var(--cream)", padding: "6rem 0" }}>
       <div className="container-custom">
 
-        <AnimateOnScroll className="mb-12">
-          <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "10px", letterSpacing: "0.35em", textTransform: "uppercase", color: "var(--gold)" }}>
-            {t.products.sectionLabel}
-          </span>
-          <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(1.9rem,3.5vw,3rem)", fontWeight: 500, color: "var(--brown)", marginTop: "0.5rem", marginBottom: "1.25rem" }}>
-            {t.products.title}
-          </h2>
-          <span className="rule-gold" />
-          <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.875rem", color: "var(--muted)", marginTop: "1.25rem", maxWidth: "520px", lineHeight: 1.85 }}>
-            {t.products.subtitle}
-          </p>
+        <AnimateOnScroll>
+          <SectionHeading
+            section="collections"
+            label={t.products.sectionLabel}
+            title={t.products.title}
+            subtitle={t.products.subtitle}
+          />
         </AnimateOnScroll>
 
         {/* Filter row */}

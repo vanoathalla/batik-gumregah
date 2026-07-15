@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import AnimateOnScroll from "@/components/ui/AnimateOnScroll";
+import SectionHeading from "@/components/ui/SectionHeading";
 import { X, ZoomIn } from "lucide-react";
 import type { GalleryItem } from "@/lib/store";
 
@@ -35,17 +36,13 @@ export default function GallerySection() {
     <section id="gallery" style={{ background: "var(--cream-2)", padding: "6rem 0" }}>
       <div className="container-custom">
 
-        <AnimateOnScroll className="mb-16">
-          <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "10px", letterSpacing: "0.35em", textTransform: "uppercase", color: "var(--gold)" }}>
-            {t.gallery.sectionLabel}
-          </span>
-          <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(1.9rem,3.5vw,3rem)", fontWeight: 500, color: "var(--brown)", marginTop: "0.5rem", marginBottom: "1.25rem" }}>
-            {t.gallery.title}
-          </h2>
-          <span className="rule-gold" />
-          <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.875rem", color: "var(--muted)", marginTop: "1.25rem", maxWidth: "520px", lineHeight: 1.85 }}>
-            {t.gallery.subtitle}
-          </p>
+        <AnimateOnScroll>
+          <SectionHeading
+            section="gallery"
+            label={t.gallery.sectionLabel}
+            title={t.gallery.title}
+            subtitle={t.gallery.subtitle}
+          />
         </AnimateOnScroll>
 
         {items.length === 0 ? (

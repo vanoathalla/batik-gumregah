@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import AnimateOnScroll from "@/components/ui/AnimateOnScroll";
+import SectionHeading from "@/components/ui/SectionHeading";
 import { ChevronLeft, ChevronRight, Star, Send } from "lucide-react";
 import type { Testimonial } from "@/lib/store";
 import { COUNTRY_FLAGS } from "@/lib/store";
@@ -63,14 +64,12 @@ export default function TestimonialsSection() {
       <div className="container-custom">
 
         {/* Header */}
-        <AnimateOnScroll className="mb-16">
-          <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "10px", letterSpacing: "0.35em", textTransform: "uppercase", color: "var(--gold)" }}>
-            {t.testimonials.sectionLabel}
-          </span>
-          <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(1.9rem,3.5vw,3rem)", fontWeight: 500, color: "var(--brown)", marginTop: "0.5rem", marginBottom: "1.25rem" }}>
-            {t.testimonials.title}
-          </h2>
-          <span className="rule-gold" />
+        <AnimateOnScroll>
+          <SectionHeading
+            section="testimonials"
+            label={t.testimonials.sectionLabel}
+            title={t.testimonials.title}
+          />
         </AnimateOnScroll>
 
         {/* Testimonials list */}

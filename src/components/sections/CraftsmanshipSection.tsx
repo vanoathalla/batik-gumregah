@@ -2,6 +2,7 @@
 
 import { useLanguage } from "@/context/LanguageContext";
 import AnimateOnScroll from "@/components/ui/AnimateOnScroll";
+import SectionHeading from "@/components/ui/SectionHeading";
 import { craftSteps } from "@/lib/data";
 import { Pencil, Wand2, Palette, Wind, Droplets, BadgeCheck } from "lucide-react";
 
@@ -14,17 +15,13 @@ export default function CraftsmanshipSection() {
     <section id="craftsmanship" style={{ background: "var(--cream)", padding: "6rem 0" }}>
       <div className="container-custom">
 
-        <AnimateOnScroll className="mb-16">
-          <span style={{ fontFamily: "'Poppins',sans-serif", fontSize: "10px", letterSpacing: "0.35em", textTransform: "uppercase", color: "var(--gold)" }}>
-            {t.craftsmanship.sectionLabel}
-          </span>
-          <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: "clamp(1.9rem,3.5vw,3rem)", fontWeight: 500, color: "var(--brown)", marginTop: "0.5rem", marginBottom: "1.25rem" }}>
-            {t.craftsmanship.title}
-          </h2>
-          <span className="rule-gold" />
-          <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.875rem", color: "var(--muted)", marginTop: "1.25rem", maxWidth: "520px", lineHeight: 1.85 }}>
-            {t.craftsmanship.subtitle}
-          </p>
+        <AnimateOnScroll>
+          <SectionHeading
+            section="craftsmanship"
+            label={t.craftsmanship.sectionLabel}
+            title={t.craftsmanship.title}
+            subtitle={t.craftsmanship.subtitle}
+          />
         </AnimateOnScroll>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "1.5rem" }}
