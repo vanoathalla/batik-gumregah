@@ -11,10 +11,10 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     Promise.all([
-      apiFetch("/api/admin/testimonials").then((r) => r.json()),
-      apiFetch("/api/admin/products").then((r) => r.json()),
-      apiFetch("/api/admin/artisans").then((r) => r.json()),
-      apiFetch("/api/admin/gallery").then((r) => r.json()),
+      apiFetch("/api/admin/testimonials").then((r) => r.json()).catch(() => []),
+      apiFetch("/api/admin/products").then((r) => r.json()).catch(() => []),
+      apiFetch("/api/admin/artisans").then((r) => r.json()).catch(() => []),
+      apiFetch("/api/admin/gallery").then((r) => r.json()).catch(() => []),
     ]).then(([testi, prod, art, gal]) => {
       setStats({
         testimonials: Array.isArray(testi) ? testi.length : 0,

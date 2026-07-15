@@ -13,20 +13,34 @@ export default function AdminTestimonials() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const res  = await apiFetch("/api/admin/testimonials");
-    const data = await res.json();
-    if (Array.isArray(data)) {
-      setList(data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+    try {
+      const res  = await apiFetch("/api/admin/testimonials");
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setList(data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+      }
+    } catch {
+      // network error — list stays empty, user sees "Belum ada testimoni"
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, [apiFetch]);
 
   useEffect(() => { load(); }, [load]);
 
   const remove = async (id: string) => {
     if (!confirm("Hapus testimoni ini?")) return;
-    await apiFetch("/api/admin/testimonials", { method: "DELETE", body: JSON.stringify({ id }) });
-    load();
+    try {
+      const res = await apiFetch("/api/admin/testimonials", { method: "DELETE", body: JSON.stringify({ id }) });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(`Gagal menghapus: ${data.error || "Terjadi kesalahan"}`);
+      } else {
+        load();
+      }
+    } catch {
+      alert("Gagal menghubungi server.");
+    }
   };
 
   return (

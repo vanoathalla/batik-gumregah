@@ -4,5 +4,11 @@ import { NextResponse } from "next/server";
 import { getArtisans } from "@/lib/db";
 
 export async function GET() {
-  return NextResponse.json(await getArtisans());
+  try {
+    const data = await getArtisans();
+    return NextResponse.json(data);
+  } catch (e) {
+    console.error("GET /api/artisans error:", e);
+    return NextResponse.json({ error: "Gagal memuat data pengrajin." }, { status: 500 });
+  }
 }

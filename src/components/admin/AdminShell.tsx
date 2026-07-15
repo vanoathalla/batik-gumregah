@@ -90,7 +90,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             style={{ display: "flex", alignItems: "center", gap: "8px", background: "none", border: "none", cursor: "pointer", fontFamily: "'Poppins',sans-serif", fontSize: "0.75rem", color: "#7A6A5A", padding: 0 }}>
             <ExternalLink size={13} /> Lihat Website
           </button>
-          <button onClick={() => { logout(); router.replace("/admin/login"); }}
+          <button onClick={() => { logout(); router.replace("/"); }}
             style={{ display: "flex", alignItems: "center", gap: "8px", background: "none", border: "none", cursor: "pointer", fontFamily: "'Poppins',sans-serif", fontSize: "0.75rem", color: "#7A6A5A", padding: 0 }}>
             <LogOut size={13} /> Keluar
           </button>

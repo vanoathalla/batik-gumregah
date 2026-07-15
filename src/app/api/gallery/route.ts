@@ -4,5 +4,11 @@ import { NextResponse } from "next/server";
 import { getGallery } from "@/lib/db";
 
 export async function GET() {
-  return NextResponse.json(await getGallery());
+  try {
+    const data = await getGallery();
+    return NextResponse.json(data);
+  } catch (e) {
+    console.error("GET /api/gallery error:", e);
+    return NextResponse.json({ error: "Gagal memuat galeri." }, { status: 500 });
+  }
 }
