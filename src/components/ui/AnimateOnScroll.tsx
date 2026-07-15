@@ -16,22 +16,28 @@ export default function AnimateOnScroll({ children, className = "", delay = 0, d
     const el = ref.current;
     if (!el) return;
 
+    // Respect user's reduced-motion preference — skip animation entirely
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) return;
+
     const directionMap = {
-      up: "translateY(40px)",
-      left: "translateX(-40px)",
-      right: "translateX(40px)",
+      up: "translateY(32px)",
+      left: "translateX(-32px)",
+      right: "translateX(32px)",
       fade: "translateY(0)",
     };
 
     el.style.opacity = "0";
     el.style.transform = directionMap[direction];
-    el.style.transition = `opacity 0.8s ease ${delay}ms, transform 0.8s ease ${delay}ms`;
+    el.style.transition = `opacity 0.6s ease ${delay}ms, transform 0.6s ease ${delay}ms`;
+    el.style.willChange = "opacity, transform";
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           el.style.opacity = "1";
           el.style.transform = "translateY(0) translateX(0)";
+          el.style.willChange = "auto";
           observer.unobserve(el);
         }
       },

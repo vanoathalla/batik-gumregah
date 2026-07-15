@@ -3,13 +3,28 @@
 import { useLanguage } from "@/context/LanguageContext";
 import AnimateOnScroll from "@/components/ui/AnimateOnScroll";
 import { MapPin, Clock, Phone, Share2 } from "lucide-react";
+import { useRef, useState, useEffect } from "react";
 
 export default function VisitSection() {
   const { t } = useLanguage();
+  const mapRef = useRef<HTMLDivElement>(null);
+  const [showMap, setShowMap] = useState(false);
+
+  // Only load the heavy Google Maps iframe when it scrolls into view
+  useEffect(() => {
+    const el = mapRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setShowMap(true); observer.disconnect(); } },
+      { rootMargin: "200px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const info = [
-    { Icon: MapPin,  label: t.visit.addressLabel, value: t.visit.address   },
-    { Icon: Clock,   label: t.visit.hoursLabel,   value: t.visit.hours     },
+    { Icon: MapPin,  label: t.visit.addressLabel, value: t.visit.address    },
+    { Icon: Clock,   label: t.visit.hoursLabel,   value: t.visit.hours      },
     { Icon: Phone,   label: t.visit.phoneLabel,   value: "+62 882-2951-4350" },
     { Icon: Share2,  label: "Instagram",          value: "@batik_gumregah"  },
   ];
@@ -56,17 +71,24 @@ export default function VisitSection() {
             </div>
           </AnimateOnScroll>
 
-          {/* Map */}
+          {/* Map — lazy loaded */}
           <AnimateOnScroll direction="right">
-            <div style={{ borderRadius: "16px", overflow: "hidden", height: "400px", border: "1px solid var(--border)" }}>
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.6!2d110.4123!3d-7.9469!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sKanten%2C+Imogiri%2C+Bantul!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid"
-                width="100%" height="100%"
-                style={{ border: 0, display: "block" }}
-                allowFullScreen loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Lokasi Batik Gumregah"
-              />
+            <div ref={mapRef} style={{ borderRadius: "16px", overflow: "hidden", height: "400px", border: "1px solid var(--border)", background: "var(--cream-2)" }}>
+              {showMap ? (
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.6!2d110.4123!3d-7.9469!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sKanten%2C+Imogiri%2C+Bantul!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid"
+                  width="100%" height="100%"
+                  style={{ border: 0, display: "block" }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Lokasi Batik Gumregah"
+                />
+              ) : (
+                <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <MapPin size={24} style={{ color: "var(--gold)", opacity: 0.4 }} />
+                </div>
+              )}
             </div>
           </AnimateOnScroll>
         </div>
