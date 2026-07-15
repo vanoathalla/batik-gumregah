@@ -31,6 +31,23 @@ export default function HeroSection() {
 
       {/* Content */}
       <div className="relative z-10 container-custom text-center py-32">
+        {/* Aksara Jawa di atas eyebrow */}
+        <p
+          aria-hidden="true"
+          style={{
+            fontFamily: "'Noto Serif Javanese', 'Javanese Text', serif",
+            fontSize: "1.2rem",
+            color: "#B89660",
+            opacity: 0.5,
+            letterSpacing: "0.1em",
+            marginBottom: "0.75rem",
+            animation: "fadeUp .6s ease-out both",
+            userSelect: "none",
+          }}
+        >
+          ꦧꦠꦶꦏ꧀
+        </p>
+
         {/* Eyebrow */}
         <div
           className="inline-flex items-center gap-2 mb-8"
@@ -45,8 +62,6 @@ export default function HeroSection() {
           </span>
           <div className="h-px w-6 bg-[#B89660]/50" />
         </div>
-
-        {/* Headline */}
         <h1
           style={{
             fontFamily: "'Cormorant Garamond', serif",
