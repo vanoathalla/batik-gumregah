@@ -112,7 +112,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       {sideOpen && (
         <div style={{ position: "fixed", inset: 0, zIndex: 39 }}>
           <div onClick={() => setSideOpen(false)} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.5)" }} />
-          <aside style={{ ...s.sidebar, width: "200px" }}>
+          <aside style={{ ...s.sidebar, width: "220px" }}>
             <nav style={{ flex: 1, marginTop: "3.5rem" }}>
               {NAV.map(({ href, label, icon: Icon }) => (
                 <button key={href} onClick={() => { router.push(href); setSideOpen(false); }}
@@ -121,6 +121,22 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                 </button>
               ))}
             </nav>
+
+            {/* Footer actions — same as desktop sidebar */}
+            <div style={{ padding: "1rem 1.5rem", borderTop: "1px solid rgba(184,150,96,0.12)", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              <button
+                onClick={() => { setSideOpen(false); window.open("/", "_blank"); }}
+                style={{ display: "flex", alignItems: "center", gap: "8px", background: "none", border: "none", cursor: "pointer", fontFamily: "'Poppins',sans-serif", fontSize: "0.8rem", color: "#7A6A5A", padding: 0 }}
+              >
+                <ExternalLink size={14} /> Lihat Website
+              </button>
+              <button
+                onClick={() => { setSideOpen(false); logout(); router.replace("/"); }}
+                style={{ display: "flex", alignItems: "center", gap: "8px", background: "none", border: "none", cursor: "pointer", fontFamily: "'Poppins',sans-serif", fontSize: "0.8rem", color: "#A85440", padding: 0 }}
+              >
+                <LogOut size={14} /> Keluar
+              </button>
+            </div>
           </aside>
         </div>
       )}
