@@ -2,7 +2,8 @@
 
 import { useRef, useState } from "react";
 import { useAdmin } from "@/hooks/useAdmin";
-import { Upload, X, Image as ImageIcon } from "lucide-react";
+import { Upload, X } from "lucide-react";
+import { resizeImage } from "@/lib/imageResize";
 
 interface Props {
   folder: string;
@@ -22,8 +23,11 @@ export default function ImageUpload({ folder, value, onChange, label = "Foto" }:
     setErr("");
     setUploading(true);
     try {
+      // Resize before upload — max 1200px, quality 82%
+      const compressed = await resizeImage(file, 1200, 0.82);
+
       const form = new FormData();
-      form.append("file", file);
+      form.append("file", compressed);
       form.append("folder", folder);
       const res = await apiFetch("/api/admin/upload", { method: "POST", body: form, headers: {} });
       const data = await res.json();
@@ -71,7 +75,7 @@ export default function ImageUpload({ folder, value, onChange, label = "Foto" }:
         <div
           onDrop={onDrop}
           onDragOver={(e) => e.preventDefault()}
-          onClick={() => inputRef.current?.click()}
+          onClick={() => !uploading && inputRef.current?.click()}
           style={{
             border: "1px dashed rgba(184,150,96,0.4)", borderRadius: "10px",
             padding: "1.25rem", display: "flex", flexDirection: "column",
@@ -92,7 +96,7 @@ export default function ImageUpload({ folder, value, onChange, label = "Foto" }:
                 Klik atau drag foto ke sini
               </p>
               <p style={{ fontFamily: "'Poppins',sans-serif", fontSize: "0.65rem", color: "#B8A898" }}>
-                JPG, PNG, WebP · Maks 5MB
+                JPG, PNG, WebP — otomatis dikompresi
               </p>
             </>
           )}

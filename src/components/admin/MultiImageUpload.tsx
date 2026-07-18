@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useAdmin } from "@/hooks/useAdmin";
 import { Upload, X } from "lucide-react";
+import { resizeImage } from "@/lib/imageResize";
 
 interface Props {
   folder: string;
@@ -20,14 +21,15 @@ export default function MultiImageUpload({ folder, values, onChange, max = 5, la
 
   const uploadFile = async (file: File): Promise<{ url: string | null; error?: string }> => {
     try {
+      // Resize before upload
+      const compressed = await resizeImage(file, 1200, 0.82);
+
       const form = new FormData();
-      form.append("file", file);
+      form.append("file", compressed);
       form.append("folder", folder);
       const res = await apiFetch("/api/admin/upload", { method: "POST", body: form, headers: {} });
       const data = await res.json();
-      if (!res.ok) {
-        return { url: null, error: data.error || "Gagal mengunggah foto." };
-      }
+      if (!res.ok) return { url: null, error: data.error || "Gagal mengunggah foto." };
       return { url: data.url };
     } catch {
       return { url: null, error: "Kesalahan jaringan saat mengunggah foto." };
@@ -50,9 +52,7 @@ export default function MultiImageUpload({ folder, values, onChange, max = 5, la
       }
     }
 
-    if (uploadError) {
-      setErr(uploadError);
-    }
+    if (uploadError) setErr(uploadError);
     onChange([...values, ...results]);
     setUploading(false);
   };
@@ -81,7 +81,7 @@ export default function MultiImageUpload({ folder, values, onChange, max = 5, la
 
         {values.length < max && (
           <div
-            onClick={() => inputRef.current?.click()}
+            onClick={() => !uploading && inputRef.current?.click()}
             onDrop={(e) => { e.preventDefault(); handleFiles(e.dataTransfer.files); }}
             onDragOver={(e) => e.preventDefault()}
             style={{ width: "80px", height: "70px", borderRadius: "8px", border: "1px dashed rgba(184,150,96,0.4)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", cursor: uploading ? "not-allowed" : "pointer", gap: "3px", background: "rgba(184,150,96,0.03)", transition: "border-color .2s" }}
