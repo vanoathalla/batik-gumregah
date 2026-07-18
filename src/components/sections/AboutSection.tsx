@@ -26,12 +26,11 @@ export default function AboutSection() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem", alignItems: "start", marginBottom: "5rem" }}
           className="grid-cols-1 md:grid-cols-2">
 
-          {/* Image placeholder */}
+          {/* Image */}
           <AnimateOnScroll direction="left">
-            <div style={{ aspectRatio: "4/5", borderRadius: "16px", overflow: "hidden" }}
-              className="img-placeholder">
-              <div style={{ width: "40px", height: "40px", borderRadius: "50%", border: "1px solid var(--border)" }} />
-              <span style={{ fontSize: "10px", letterSpacing: "0.2em", textTransform: "uppercase" }}>Photo</span>
+            <div style={{ aspectRatio: "1/1", borderRadius: "16px", overflow: "hidden", border: "1px solid var(--border)" }}
+              className="shadow-md-warm">
+              <img src="/images/about.png" alt="Tentang Batik Gumregah" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
           </AnimateOnScroll>
 
