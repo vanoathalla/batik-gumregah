@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { put } from "@vercel/blob";
+import fs from "fs";
+import path from "path";
 
 function auth(req: NextRequest) {
   return req.headers.get("x-admin-token") === (process.env.ADMIN_PASSWORD ?? "admin123");
@@ -21,14 +23,37 @@ export async function POST(req: NextRequest) {
     // No size limit — client already resized before upload
 
     const ext      = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
-    const filename = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`;
+    const hasVercelBlob = process.env.BLOB_READ_WRITE_TOKEN && process.env.BLOB_READ_WRITE_TOKEN !== "placeholder";
 
-    const blob = await put(filename, file, {
-      access: "public",
-      contentType: file.type,
-    });
+    let url = "";
 
-    return NextResponse.json({ success: true, url: blob.url }, { status: 201 });
+    if (hasVercelBlob) {
+      const filename = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`;
+      const blob = await put(filename, file, {
+        access: "public",
+        contentType: file.type,
+      });
+      url = blob.url;
+    } else {
+      // Local upload fallback (for development/non-Vercel environment)
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+
+      const publicDir = path.join(process.cwd(), "public");
+      const uploadDir = path.join(publicDir, "uploads", folder);
+
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+
+      const fileBaseName = `${Date.now()}-${Math.random().toString(36).slice(2,7)}.${ext}`;
+      const filePath = path.join(uploadDir, fileBaseName);
+      fs.writeFileSync(filePath, buffer);
+
+      url = `/uploads/${folder}/${fileBaseName}`;
+    }
+
+    return NextResponse.json({ success: true, url }, { status: 201 });
   } catch (e) {
     console.error("Upload error:", e);
     return NextResponse.json({ error: "Upload failed" }, { status: 500 });
